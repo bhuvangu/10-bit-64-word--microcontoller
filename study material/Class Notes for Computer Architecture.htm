@@ -1,0 +1,5573 @@
+
+<!-- saved from url=(0062)http://cs.nyu.edu/courses/fall99/V22.0436-001/class-notes.html -->
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <TITLE>Class Notes for Computer Architecture</TITLE>
+</HEAD><BODY>
+
+<DIV align="center">
+<BIG>Computer Architecture</BIG><BR>
+1999-2000 Fall<BR>
+MW 11:55-1:10<BR>
+Ciww 109
+</DIV>
+
+
+<DIV align="center">
+<BR>Allan Gottlieb
+<BR>gottlieb@nyu.edu
+<BR>http://allan.ultra.nyu.edu/gottlieb
+<BR>715 Broadway, Room 1001
+<BR>212-998-3344
+<BR>609-951-2707
+<BR>email is best
+</DIV>
+
+<H1>Administrivia</H1>
+
+<H3>Web Pages</H3>
+
+<P>
+There is a web page for the course.  You can find it from my home page.
+</P><UL>
+<LI>Can find these notes there.
+Let me know if you can't find it.
+</LI><LI>They will be updated as bugs are found.
+</LI><LI>Will also have each lecture available as a separate page.  I will
+produce the page after the lecture is given.  These individual pages
+might not get updated. 
+</LI></UL>
+
+<H3>Textbook</H3>
+<P>
+Text is Hennessy and Patterson ``Computer Orgaiization and Design
+The Hardware/Software Interface''.
+</P><UL>
+<LI>Available in bookstore.
+</LI><LI>The main body of the book assumes you know logic design.
+</LI><LI>I do NOT make that assumption.
+</LI><LI>We will start with appendix B, which is logic design review.
+</LI><LI>A more extensive treatment of logic design is M. Morris Mano
+``Computer System Architecture'', Prentice Hall.
+</LI><LI>We will not need as much as mano covers and it is not a cheap book so
+I am not requiring you to get it.  I will have it put into the library.
+</LI><LI>My treatment will follow H&amp;P not mano.
+</LI><LI>Most of the figures in these notes are based on figures from the
+course textbook.  The following copyright notice applies.
+<BR>
+``All figures from Computer Organization and Design:
+The Hardware/Software Approach, Second Edition, by
+David Patterson and John Hennessy, are copyrighted
+material (COPYRIGHT 1998 MORGAN KAUFMANN
+PUBLISHERS, INC. ALL RIGHTS RESERVED).
+Figures may be reproduced only for classroom or
+personal educational use in conjunction with the book
+and only when the above copyright line is included. They
+may not be otherwise reproduced, distributed, or
+incorporated into other works without the prior written
+consent of the publisher.''
+</LI></UL>
+
+<H3>Homeworks and Labs</H3>
+
+<P>
+I make a distinction between homework and labs.
+
+</P><P>
+Labs are
+</P><UL>
+<LI><EM>Required</EM>
+</LI><LI>Due several lectures later (date given on assignment)
+</LI><LI>Graded and form part of your final grade
+</LI><LI>Penalized for lateness
+</LI></UL>
+Homeworks are
+<UL>
+<LI>Optional
+</LI><LI>Due beginning of <EM>Next</EM> lecture
+</LI><LI>Not accepted late
+</LI><LI>Mostly from the book
+</LI><LI>Collected and returned
+</LI><LI>Can help, but not hurt, your grade
+</LI></UL>
+
+<P>
+Upper left board for assignments and announcements.
+
+</P><H1>Appendix B: Logic Design</H1>
+
+<P>
+<STRONG>Homework:</STRONG> Read B1
+
+</P><H2>B.2:  Gates, Truth Tables and Logic Equations</H2>
+
+<P>
+<STRONG>Homework:</STRONG> Read B2
+
+Digital ==&gt; Discrete
+
+</P><P>
+Primarily (but NOT exclusively) binary at the hardware level
+
+</P><P>
+Use only two voltages -- high and low
+</P><UL>
+<LI>This hides a great deal of engineering
+</LI><LI>Must make sure not to sample the signal when not in one of these two states.
+</LI><LI>Sometimes it is just a matter of waiting long enough
+(determines the clock rate i.e. how many megahertz)
+</LI><LI>Other times it is worse and you must avoid glitches.
+</LI><LI>Oscilloscope traces shown below
+<UL>
+<LI>Vertical axis is voltage; horizontal axis is time.
+</LI><LI>Square wave--the ideal.  How we think of circuits
+</LI><LI>Sine wave
+</LI><LI>Actual wave
+<UL>
+<LI>Non-zero rise times and fall times
+</LI><LI>Overshoots and undershoots
+</LI><LI>Glitches
+</LI></UL>
+</LI></UL>
+</LI></UL>
+
+<IMG src="./Class Notes for Computer Architecture_files/osc-traces.png">
+
+<P>
+
+
+</P><P>
+Since this is not an engineering course, we will ignore these
+issues and assume square waves.
+
+</P><P>
+In English digital (think digit, i.e. finger) =&gt; 10,
+but not in computers
+
+</P><P>
+Bit = Binary digIT
+
+</P><P>
+Instead of saying high voltage and low voltage, we say true and false
+or 1 and 0 or asserted and deasserted.
+
+</P><P>
+0 and 1 are called complements of each other.
+
+</P><P>
+A logic block can be thought of as a black box that takes signals in
+and produces signals out.  There are two kinds of blocks
+
+</P><UL>
+<LI>Combinational (or combinatorial)
+<UL>
+<LI>Does <EM>NOT</EM> have memory elements
+</LI><LI>Is simpler than circuits with memory since it is a function from
+the inputs to the outputs
+</LI></UL>
+</LI><LI>Sequential
+<UL>
+<LI>Contains memory
+</LI><LI>The current value in the memory is called the state of the block.
+</LI><LI>The output depends on the input AND the state
+</LI></UL>
+</LI></UL>
+
+<P>
+We are doing combinational now.  Will do sequential later (few lectures).
+
+</P><H3>TRUTH TABLES</H3>
+
+<P>
+Since combinatorial logic has no memory, it is simply a function from
+its inputs to its outputs.  A
+<STRONG>Truth Table</STRONG> has as columns all inputs
+and all outputs.  It has one row for each possible set of input values
+and the output columns have the output for that input.  Let's start
+with a really simple case a logic block with one input and one output.
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/1-in-1-out.png">
+
+</P><P>
+There are two columns (1 + 1) and two rows (2**1).
+
+</P><PRE>In  Out
+0   ?
+1   ?
+</PRE>
+
+<H4>How many are there?</H4>
+
+<P>
+How many different truth tables are there for one in and one out?
+
+</P><P>
+Just 4: the constant functions 1 and 0, the identity, and an inverter
+(pictures in a few minutes).  There were two `?'s in the above table
+each can be a 0 or 1 so 2**2 possibilities.
+
+</P><P>
+OK. Now how about two inputs and 1 output.
+
+</P><P>
+Three columns (2+1) and 4 rows (2**2).
+
+</P><PRE>In1 In2  Out
+0   0    ?
+0   1    ?
+1   0    ?
+1   1    ?
+</PRE>
+
+<P>
+How many are there?  It is just how many ways can you fill in the
+output entries.  There are 4 output entries so answer is 2**4=16.
+
+</P><P>
+How about 2 in and 8 out?
+</P><UL>
+<LI>10 cols
+</LI><LI>4 rows
+</LI><LI>2**(4*8)=4 billion possible
+</LI></UL> 
+
+<P>
+3 in and 8 out?
+</P><UL>
+<LI>11 cols
+</LI><LI>8 rows
+</LI><LI>2**(8**8)=2**64 possible
+</LI></UL> 
+
+<P>
+n in and k out?
+</P><UL>
+<LI>n+k cols
+</LI><LI>2**n rows
+</LI><LI>2**([2**n]*k) possible
+</LI></UL> 
+
+<P>
+Gets big fast!
+
+</P><H3>Boolean algebra</H3>
+
+<P>
+Certain logic functions (i.e. truth tables) are quite common and
+familiar.  
+
+</P><P>
+We use a notation that looks like algebra to express logic functions and
+expressions involving them.  
+
+</P><P>
+The notation is called <STRONG>Boolean algebra</STRONG> in honor of
+George Boole. 
+
+</P><P>
+
+A <STRONG>Boolean value</STRONG> is a 1 or a 0.<BR>
+A <STRONG>Boolean variable</STRONG> takes on Boolean values.  <BR>
+A Boolean function takes in boolean variables and produces boolean values.
+
+
+</P><OL>
+<LI>The (inclusive) OR Boolean function of two variables.  Draw its
+truth table.  This is written + (e.g. X+Y where X and Y are Boolean
+variables) and often called the logical sum.  (Three out of four
+output values in the truth table look right!)<BR>
+<BR>
+</LI><LI>AND.  Draw TT.  Called log product and written as a centered dot
+(like product in regular algebra).  All four values look right.<BR>
+<BR>
+</LI><LI> NOT.  Draw TT.  This is a unary operator (One argument, not two
+like above; the two above are called binary).  Written A with a bar
+over it (I will use ' instead of a bar as it is easier for my to type).<BR>
+<BR>
+</LI><LI>Exclusive OR (XOR).  Written as + with circle around.  True if
+exactly one input is true (i.e. true XOR true = false).  Draw TT.
+</LI></OL>
+
+
+<P><STRONG>Homework:</STRONG> 
+Consider the Boolean function of 3 boolean vars that is true
+if and only if exactly 1 of the three variables is true.  Draw the TT.
+
+</P><P>
+Some manipulation laws.  Remember this is Boolean <EM>ALGEBRA</EM>.
+
+</P><P>
+Identity:  
+</P><UL>
+<LI>
+A+0 = 0+A = A 
+</LI><LI>
+A.1 = 1.A = A  
+</LI><LI>
+(using . for and)
+</LI></UL>
+
+<P>
+Inverse:
+</P><UL>
+<LI> A+A' = A'+A = 1
+</LI><LI> A.A' = A'.A = 0
+</LI><LI> (using ' for not)
+</LI></UL>
+     
+
+<P>
+Both + and . are commutative so don't need as much as I wrote
+
+</P><P>
+The name inverse law is somewhat funny since you
+<EM>Add</EM> the inverse and get the identity for <EM>Product</EM>
+or <EM>Multiply</EM> by the inverse and get the identity for <EM>Sum</EM>.
+
+</P><P>
+Associative: 
+</P><UL>
+<LI> A+(B+C) = (A+B)+C 
+</LI><LI> A.(B.C)=(A.B).C
+</LI></UL>
+
+
+<P>
+Due to associative law we can write A.B.C since either order of
+evaluation gives the same answer.
+
+</P><P>
+Often elide the . so the product associative law is A(BC)=(AB)C.
+
+</P><P>
+Distributive:
+</P><UL>
+<LI>A(B+C)=AB+AC
+</LI><LI>A+(BC)=(A+B)(A+C)
+</LI><LI>Note that BOTH distributive laws hold UNLIKE ordinary arithmetic.
+</LI></UL>  
+
+<P>
+How does one prove these laws??
+
+</P><UL>
+<LI>Simple (but long) write the TTs for each and see that the outputs
+are the same.
+</LI><LI>Do the first dist laws on the board.
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>  Do the second distributive law.
+
+</P><P>
+Let's do (on the board) the examples on pages B-5 and B-6.
+Consider a logic function with three inputs A, B, and C; and three
+outputs D, E, and F defined as follows:  D is true if at least one
+input is true, E if exactly two are true, and F if all three are true.
+(Note that by if we mean if and only if.
+
+</P><P>
+Draw the truth table.
+
+</P><P>
+Show the logic equations
+
+</P><UL>
+<LI>For E first use the obvious method of writing one condition
+for each 1-value in the E column i.e.<BR>
+
+(A'BC) + (AB'C) + (ABC')
+</LI><LI>Observe that E is true if two (but not three) inputs are true,
+i.e.,<BR>
+(AB+AC+BC) (ABC)'  (using . higher precedence than +)
+</LI></UL>
+
+<P></P><HR>================ Start Lecture 2 ================<HR>
+
+<P>
+The first way we solved part E shows that <EM>any</EM> logic function
+can be written using just AND, OR, and NOT.  Indeed, it is in a nice
+form.  Called two levels of logic, i.e. it is a sum of products of
+just inputs and their compliments.
+
+</P><P>
+DeMorgan's laws:</P><UL>
+<LI> (A+B)' = A'B' 
+</LI><LI> (AB)' = A'+B'
+</LI></UL>  
+
+<P>
+You prove DM laws with TTs.  Indeed that is ...
+
+</P><P>
+<STRONG>Homework:</STRONG> B.6 on page B-45
+
+</P><P>
+Do beginning of HW on the board.
+
+</P><P>
+With DM we can do quite a bit without resorting to TTs.  For example
+one can show that the two expressions for E on example above (page
+B-6) are equal.  Indeed that is
+
+</P><P>
+<STRONG>Homework:</STRONG> B.7 on page B-45
+
+
+</P><P>Do beginning of HW on board.
+
+</P><H3>GATES</H3>
+
+<P>
+Gates implement basic logic functions: AND OR NOT XOR Equivalence
+
+<IMG src="./Class Notes for Computer Architecture_files/gates.png">
+
+</P><P>
+Show why the picture is equivalence, i.e (A XOR B)' is AB + A'B'
+
+</P><PRE>(A XOR B)' =
+(A'B+AB')' = 
+(A'B)' (AB')' = 
+(A''+B') (A'+B'') = 
+(A + B') (A' + B) = 
+AA' + AB + B'A' + B'B = 
+0   + AB + B'A' + 0 = 
+AB + A'B'
+</PRE>
+
+<P>
+Often omit the inverters and draw the little circles at the input or
+output of the other gates (AND OR).  These little circles are
+sometimes called bubbles.
+
+<IMG src="./Class Notes for Computer Architecture_files/bubbles.png">
+
+</P><P>
+This explains why inverter is drawn as a buffer with a bubble.
+
+</P><P>
+<STRONG>Homework:</STRONG> B.2 on page B-45 (I previously did the first part
+of this homework).
+
+</P><P>
+<STRONG>Homework:</STRONG> Consider the Boolean function of 3 boolean vars
+(i.e. a three input function) that is true if and only if exactly 1 of
+the three variables is true.  Draw the TT.  Draw the logic diagram
+with AND OR NOT.  Draw the logic diagram with AND OR and bubbles.
+
+</P><P>
+We have seen that any logic function can be constructed from AND OR
+NOT.  So this triple is called <EM>universal</EM>.  
+
+</P><P>
+Are there any pairs that
+are universal?  Could it be that there is a single function that is
+universal?  YES!
+
+</P><P>
+NOR (NOT OR) is true when OR is false.  Do TT.
+
+</P><P>
+NAND (NOT AND) is true when AND is false.  Do TT.
+
+</P><P>
+Draw two logic diagrams for each, one from definition and equivalent
+one with bubbles.
+
+</P><P>
+<STRONG>Theorem</STRONG>
+A 2-input NOR is universal and 
+A 2-input NAND is universal.
+
+</P><P>
+<STRONG>Proof</STRONG>
+
+</P><P>
+We must show that you can get A', A+B, and AB using just a two input
+NOR.
+
+</P><UL>
+<LI>A' = A NOR A
+</LI><LI>A+B = (A NOR B)' (we can use ' by above)
+</LI><LI>AB = (A' OR B')'
+</LI></UL>
+
+
+<P>
+<STRONG>Homework:</STRONG> Show that a 2-input NAND is universal.
+
+</P><P>
+Can draw NAND and NOR each two ways (because (AB)' = A' + B')
+
+</P><P>
+We have seen how to get a logic function from a TT.  Indeed we can
+get one that is just two levels of logic.  But it might not be the
+simplest possible.  That is we may have more gates than necessary.
+
+</P><P>
+Trying to minimize the number of gates is NOT trivial.  Mano covers
+this in detail.  We will not cover it in this course.  It is not in
+H&amp;P.  I actually like it but must admit that it takes a few lectures
+to cover well and it not used so much since it is algorithmic and is
+done automatically by CAD tools.
+
+</P><P>
+Minimization is not unique, i.e. there can be two or more minimal
+forms.
+
+</P><P>
+Given A'BC + ABC + ABC'  <BR>
+Combine first two to get BC + ABC'<BR>
+Combine last two to get A'BC + AB
+
+</P><P>
+Sometimes when building a circuit, you don't care what the output is
+for certain input values.  For example, that input combination is
+cannot occur.  Another example occurs when, for this combination of
+input values, a later part of the circuit will ignore the output of
+this part.  These are called <STRONG>don't care outputs</STRONG>
+situations.  Making use of don't cares can reduce the number of gates
+needed.
+
+</P><P>
+Can also have <STRONG>don't care inputs</STRONG>
+when , for certain values of a subset of the inputs, the output is
+already determined and you don't have to look at the remaining
+inputs.  We will see a case of this in the very next topic, multiplexors.
+
+</P><H3>An aside on theory</H3>
+
+<P>
+Putting a circuit in disjunctive normal form (i.e. two levels of
+logic) means that every path from the input to the output goes through
+very few gates.  In fact only two, an OR and an AND.  Maybe we should
+say three since the AND can have a NOT (bubble).  Theorticians call
+this number (2 or 3 in our case) the <EM>depth</EM> of the circuit.
+Se we see that every logic function can be implemented with small
+depth.  But what about the <EM>width</EM>, i.e., the number of gates.
+
+</P><P>
+The news is bad.  The <STRONG>parity</STRONG> function takes n inputs
+and gives TRUE if and only if the number of input TRUEs is odd.
+If the depth is fixed (say limited to 3), the number of gates needed
+for parity is exponential in n.
+
+</P><H2>B.3 COMBINATIONAL LOGIC</H2>
+
+<P>
+<STRONG>Homework:</STRONG>
+Read B.3.
+
+</P><P>
+<STRONG>Generic Homework:</STRONG>
+Read sections in book corresponding to the lectures.
+
+</P><P>
+</P><H3>Multiplexor</H3>
+
+<IMG src="./Class Notes for Computer Architecture_files/mux.png">
+
+<P>
+Often called a <STRONG>mux</STRONG> or a <STRONG>selector</STRONG>
+
+</P><P>
+Show equiv circuit with AND OR
+
+</P><P>
+Hardware if-then-else
+</P><PRE>    if S=0
+        M=A
+    else
+        M=B
+    endif
+</PRE>
+
+<P>
+Can have 4 way mux (2 selector lines)
+
+</P><P>
+
+<IMG src="./Class Notes for Computer Architecture_files/mux4.png">
+
+</P><P>
+This is an if-then-elif-elif-else
+</P><PRE>   if S1=0 and S2=0
+        M=A
+    elif S1=0 and S2=1
+        M=B
+    elif S1=1 and S2=0
+        M=C
+    else -- S1=1 and S2=1
+        M=D
+    endif
+</PRE>
+
+<P>
+Do a TT for 2 way mux.  Redo it with don't care values.<BR>
+Do a TT for 4 way mux with don't care values.
+
+</P><P></P><HR>================ Start Lecture 3 ================<HR>
+
+<P>
+<STRONG>Homework:</STRONG> 
+B-12. Assume you have constant signals 1 and 0 as well.
+
+</P><H3>Decoder</H3>
+
+<P>
+
+<IMG src="./Class Notes for Computer Architecture_files/decoder.png">
+
+</P><P>
+</P><UL>
+<LI>    Note the ``3'' with a slash, which signifies a three bit input.
+        This notation represents three (1-bit) wires.
+</LI><LI>    Takes n signals in produces 2^n signals out
+</LI><LI>    View input as ``binary n'', the output has n'th bit set
+</LI><LI>    Implement on board with AND/OR
+</LI></UL>
+
+<H4>Encoder</H4>
+<UL>
+<LI>    Reverse "function" of encoder
+</LI><LI>    Not defined for all inputs (exactly one must be 1)
+</LI></UL>
+
+
+<P>
+Sneaky way to see that NAND is universal.
+</P><UL>
+<LI>First show that you can get NOT from NAND.  Hence we can build
+inverters.
+</LI><LI>Now imagine that you are asked to do a circuit for some function
+with N inputs.  Assume you have only one output.
+</LI><LI>Using inverters you can get 2N signals the N original and N
+complemented.<BR>
+<IMG src="./Class Notes for Computer Architecture_files/inverter.png">
+</LI><LI>Recall that the natural sum of products form is a bunch of ORs
+feeding into one AND.<BR>
+<IMG src="./Class Notes for Computer Architecture_files/sneaky.png">
+</LI><LI>Naturally you can add pairs of bubbles since they ``cancel''<BR>
+<IMG src="./Class Notes for Computer Architecture_files/sneaky2.png">
+</LI><LI>But these are all NANDS!!
+</LI></UL>
+
+
+<H4>Half Adder</H4>
+<UL>
+<LI>    Inputs X and Y
+</LI><LI>    Outputs S and Co (carry out)
+</LI><LI>    No CarryIn
+</LI><LI>    Draw TT
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG> Draw logic diagram
+
+</P><H4>Full Adder</H4>
+<UL>
+<LI>    Inputs X, Y and Ci
+</LI><LI>    Output S and Co
+</LI><LI>    S =  #1s in X, Y, Ci is odd
+</LI><LI>    Co = #1s is at least 2
+</LI></UL>
+
+
+<P>
+<STRONG>Homework:</STRONG>
+</P><UL>
+<LI>Draw TT (8 rows)
+</LI><LI>show S = X XOR Y XOR Ci
+</LI><LI>show Co = XY + (X XOR Y)Ci
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/adder.png">
+
+</P><P>
+How about 4 bit adder ?
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/adder4.png">
+
+</P><P>
+How about n bit adder ?
+</P><UL>
+<LI>    Linear complexity
+</LI><LI>    Called ripple carry
+</LI><LI>    Faster methods exist
+</LI></UL>
+
+<P></P><HR>================ Start Lecture 4 ================<HR>
+
+<H3>PLAs--Programmable Logic Arrays</H3>
+
+<P>
+Idea is to make use of the algorithmic way you can look at a TT and
+produce a circuit diagram in the sums of product form.
+
+</P><P>
+Consider the following TT from the book (page B-13)
+
+</P><PRE>     A | B | C || D | E | F
+     --+---+---++---+---+--
+     O | 0 | 0 || 0 | 0 | 0
+     0 | 0 | 1 || 1 | 0 | 0
+     0 | 1 | 0 || 1 | 0 | 0
+     0 | 1 | 1 || 1 | 1 | 0
+     1 | 0 | 0 || 1 | 0 | 0
+     1 | 0 | 1 || 1 | 1 | 0
+     1 | 1 | 0 || 1 | 1 | 0
+     1 | 1 | 1 || 1 | 0 | 1
+</PRE><P>
+</P><UL>
+<LI>Recall that there is a big OR for each output
+</LI><LI>We can see that there are 7 product terms that will be used in one
+or more of the ORs (in fact all seven will be used in D, but that is
+special to this example)
+</LI><LI>Each of these product terms is called a <STRONG>Minterm</STRONG>
+</LI><LI>So we need a bunch of ANDs taking A, B, C as inputs (and their
+complements A', B', and C')
+</LI><LI>This is called an <STRONG>AND plane</STRONG> and the collection of
+ORs mentioned above is called a <STRONG>OR plane</STRONG>.
+</LI><LI>Convert to sum of product forms (only NOTs on vbles)
+</LI></UL>
+
+<P>
+Here is the <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/hp-figs-B06.pdf">circuit diagram</A> for
+this truth table.
+
+</P><P>
+Here it is redrawn
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/pla.png">
+</P><UL>
+<LI>This figure shows more clearly the AND plane, the OR plane, and
+the minterms.
+</LI><LI>Rather than having bubbles (i.e., custom and gates that invert), we
+simply invert each input once and send the inverted signal all the way
+accross.
+</LI><LI>AND gates are shown as vertical lines; ORs as horizontal.
+</LI><LI>Note the dots to represent connections
+</LI></UL>
+
+<P>
+Finally, it can be <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/hp-figs-B05.pdf">redrawn</A> in a
+more abstract form.
+
+</P><P>
+When a PLA is manufactured all the connections have been specified.
+That is, a PLA is specific for a given circuit.  It is somewhat of a
+misnomer since it is <EM>not</EM>programmable by the user
+
+</P><P><STRONG>Homework:</STRONG> B.10 and B.11
+
+</P><P>
+Can also have a PAL or <STRONG>Programmable array logic</STRONG>
+in which the final dots are specified
+by the user.  The manufacturer produces a ``sea of gates''; the user
+programs it to the desired logic function.
+
+</P><P>
+<STRONG>Homework:</STRONG> Read B-5
+
+</P><H3>ROMs</H3>
+
+<P>
+One way to implement a mathematical (or C) function (without side
+effects) is to perform a table lookup.
+
+</P><P>
+A ROM (Read Only Memory) is the analogous way to implement a logic
+function.  
+</P><UL>
+<LI>For a math function f we start with x and get f(x).
+</LI><LI>For a ROM with start with the address and get the value stored at
+that address.
+</LI><LI>Normally math functions are defined for an infinite number of
+values, for example f(x) = 3x  for all real numbers x
+</LI><LI>We can't build an infinite ROM (sorry), so we are only interested
+in functions defined for a finite number of values.  Today a million
+is OK a billion is too big.
+</LI><LI>To create the ROM for the function f(3)=4, f(6)=20 all other
+values undefined just have the ROM store 4 in address 3 and 20 in
+address 6
+</LI><LI>Consider a function defined for all n-bit numbers (say n=20) and
+having a k-bit output for each input.
+    <UL>
+    <LI>View each n-bit input as n 1-bit inputs.
+    </LI><LI>View each k-bit output as k 1-bit outputs.
+    </LI><LI>Since there are 2^n inputs and each requires a k 1-bit output,
+    there are a total of (2^n)k bits of output, i.e. the ROM must hold
+    (2^n)k bits.
+    </LI><LI>Imagine a truth table with n inputs and k outputs.  The total
+    number of output bits is again (2^n)k (2^n rows and k output
+    columns).
+    </LI></UL>
+</LI><LI>Thus the ROM implements a truth table, i.e. is a logic function.
+</LI></UL>
+
+<P>
+<STRONG>Important</STRONG>: The ROM is does not have state.  It is
+still a combinational circuit.  That is, it does not represent
+``memory''.  The reason is that once a ROM is manufactured, the output
+depends only on the input.
+
+</P><P>
+A <STRONG>PROM</STRONG>
+is a <EM>programmable</EM> ROM.  That is you buy the ROM with ``nothing'' in
+its memory and then <EM>before</EM>
+it is placed in the circuit you load the memory, and never change it.
+
+</P><P>
+An <STRONG>EPROM</STRONG> is an <EM>erasable</EM> PROM.  It costs more
+but if you decide to change its memory this is possible (but is slow).
+
+</P><P>
+``Normal'' EPROMs are erased by some ultraviolet light process.  But
+<STRONG>EEPROMs</STRONG> (electrically erasable PROMS) are faster and
+are done electronically.
+
+</P><P>
+All these EPROMS are erasable not writable, i.e. you can't just change
+one bit.
+
+</P><P>
+A ROM is similar to PLA
+</P><UL>
+<LI>Both can implement any truth table, in principle.
+</LI><LI>A 2Mx8 ROM can really implment any truth table with 21 inputs
+(2^21=2M) and 8 outputs.
+    <UL>
+    <LI>It stores 2M bytes
+    </LI><LI>In ROM-speak, it has 21 address pins and 8 data pins
+    </LI></UL>
+</LI><LI>A PLA with 21 inputs and 8 outputs might need to have 2M minterms
+(AND gates).
+    <UL>
+    <LI>The number of minterms depends on the truth table itself.
+    </LI><LI>For normal TTs with 21 inputs the number of minterms is MUCH
+    less than 2^21. 
+    </LI><LI>The PLA is manufactured with the number of minterms needed
+    </LI></UL>
+</LI><LI>Compare a PAL with a PROM
+    <UL>
+    <LI>Both can in principle implement any TT
+    </LI><LI>Both are user programmable
+    </LI><LI>A PROM with n inputs and k outputs can implement any TT with n
+    inputs and k outputs.
+    </LI><LI>A PAL does not have enough gates for all possibilities since
+    most TTs with n inputs and k outputs don't require nearly (2^n)k gates.
+    </LI></UL>
+</LI></UL>
+
+
+<H3>Don't Cares</H3>
+<UL>
+<LI>Sometimes not all the input and output entries in a TT are
+needed.  We indicate this with an X and it can result in a smaller
+truth table.
+</LI><LI>    Input don't cares.
+    <UL>
+    <LI>The output doesn't depend on all inputs, i.e. the output has
+    the same value no matter what value this input has.
+    </LI><LI>We saw this when we did muxes
+    </LI></UL>
+</LI><LI>    Output don't cares
+    <UL>
+    <LI>For some input values, either output is OK.
+        <UL>
+        <LI>This input combination is impossible.
+        </LI><LI>For this input combination, the given output is not used
+        (perhaps it is ``muxed out'' downstream)
+        </LI></UL>
+    </LI></UL>
+</LI></UL>
+
+<P>
+Example
+</P><UL>
+<LI>If A or C is true, then D is true (independent of B).
+</LI><LI>If A or B is true, the output E is true.
+</LI><LI>F is true if exactly one of the inputs is true, but we don't care
+about the value of F if both D and E are true
+</LI></UL>
+
+<P>
+Full truth table
+</P><PRE>     A   B   C || D   E   F
+     ----------++----------
+     0   0   0 || 0   0   0
+     0   0   1 || 1   0   1
+     0   1   0 || 0   1   1
+     0   1   1 || 1   1   0
+     1   0   0 || 1   1   1
+     1   0   1 || 1   1   0
+     1   1   0 || 1   1   0
+     1   1   1 || 1   1   1
+</PRE>
+
+<P>
+Put in the output don't cares
+</P><PRE>     A   B   C || D   E   F
+     ----------++----------
+     0   0   0 || 0   0   0
+     0   0   1 || 1   0   1
+     0   1   0 || 0   1   1
+     0   1   1 || 1   1   X
+     1   0   0 || 1   1   X
+     1   0   1 || 1   1   X
+     1   1   0 || 1   1   X
+     1   1   1 || 1   1   X
+</PRE>
+
+<P>
+Now do the input don't cares 
+</P><UL>
+<LI>B=C=1 ==&gt; D=E=11 ==&gt; F=X ==&gt; A=X
+</LI><LI>A=1 ==&gt; D=E=11 ==&gt; F=X ==&gt; B=C=X
+</LI></UL>
+
+<P>
+</P><PRE>     A   B   C || D   E   F
+     ----------++----------
+     0   0   0 || 0   0   0
+     0   0   1 || 1   0   1
+     0   1   0 || 0   1   1
+     X   1   1 || 1   1   X
+     1   X   X || 1   1   X
+</PRE>
+
+<P>
+These don't cares are important for logic minimization.  Compare the
+number of gates needed for the full TT and the reduced TT.  There are
+techniques for minimizing logic, but we will not cover them.
+
+</P><H3>Arrays of Logic Elements</H3>
+<UL>
+<LI>    Do the same thing to many signals
+</LI><LI>    Draw thicker lines and use the "by n" notation.
+</LI><LI>    Diagram below shows 32- bit 2-way mux and implementation with 32 muxes
+</LI><LI>    A <STRONG>Bus</STRONG> is a collection of data lines treated
+as a single logical 
+        (n-bit) value.
+</LI><LI>    Use an array of logic elements to process a bus.
+        For example, the above mux switches between 2 32-bit buses.
+</LI></UL>
+
+<A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/hp-figs-B08.pdf">32-bit mux</A>
+
+<BR><BR>
+<HR>*********** Big Change Coming ***********<HR>
+
+
+<H2>Sequential Circuits, Memory, and State</H2>
+
+<P>
+Why do we want to have state?
+</P><UL>
+<LI>    Memory (i.e. ram not just rom or prom)
+</LI><LI>    Counters
+</LI><LI>    Reducing gate count
+        <UL>
+        <LI>   Multiplier would be quadradic in comb logic.
+        </LI><LI>   With sequential logic (state) can do in linear.
+               <UL>
+               <LI>    What follows is unofficial (i.e. too fast to
+                       understand) 
+               </LI><LI>    Shift register holds partial sum
+               </LI><LI>    Real slick is to share this shift reg with
+                       multiplier
+               </LI><LI>    We will do this circuit later in the course
+               </LI></UL>
+        </LI></UL>
+</LI></UL>
+
+<P>
+Assume you have a real OR gate.  Assume the two inputs are both
+zero for an hour.  At time t one input becomes 1.  The output will
+OSCILLATE for a while before settling on exactly 1.  We want to be
+sure we don't look at the answer before its ready.
+
+</P><HR><DIV align="center"><STRONG>start lecture #5</STRONG></DIV><HR> 
+
+<H2>B.4: Clocks</H2>
+
+<IMG src="./Class Notes for Computer Architecture_files/clock.png">
+
+<P>
+Frequency and period
+</P><UL>
+<LI>Hertz (Hz), Megahertz, Gigahertz vs. Seconds, Microseconds,
+Nanoseconds
+</LI><LI>Old (descriptive) name for Hz is cycles per second (CPS)
+</LI><LI>Rate vs. Time
+</LI></UL>
+
+<P>
+Edges
+</P><UL>
+<LI>Rising Edge; falling edge
+</LI><LI>We use edge-triggered logic
+</LI><LI>State changes occur only on a clock edge
+</LI><LI>Will explain later what this really means
+</LI><LI>One edge is called the <EM>Active</EM> edge
+<UL>
+<LI>    The edge (rising or falling)  on which changes occur
+</LI><LI>    Choice is technology dependent
+</LI><LI>    Sometimes trigger on both edges (e.g., RAMBUS memory)
+</LI></UL>
+</LI></UL>
+
+<H4>Synchronous system</H4>
+
+<P>
+Now we are going to add <EM>state elements</EM> to the combinational
+circuits we have been using previously.
+
+</P><P>
+Remember that a combinational/combinatorial circuits has its outpus
+determined by its input, i.e. combinatorial circuits do not contain
+<EM>state</EM>.
+
+</P><P>
+<A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/hp-figs-B10.pdf">Reading and writing State Elements.</A>
+
+</P><P>
+State elements include <EM>state</EM> (naturally).
+</P><UL>
+<LI>i.e., memory
+</LI><LI>state-elements have clock as an input
+</LI><LI>can change state only at active edge
+</LI><LI>produce output <EM>Always</EM>; based on current state
+</LI><LI>all signals that are written to state elements must be valid at
+the time of the active edge.
+</LI><LI>For example, if cycle time is 10ns make sure combinational circuit
+used to compute new state values completes in 10ns
+</LI><LI>So state elements change on active edge, comb circuit
+stablizes between active edges.
+</LI><LI>Can have loops like <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/hp-figs-B11.pdf">this</A>.
+</LI><LI>Think of registers or memory as state elements.
+</LI><LI>A loop like the above is a cycle of the computer
+</LI></UL> 
+
+<H2>B.5: Memory Elements</H2>
+
+<P>
+We want <EM>edge-triggered clocked</EM> memory and will only use
+<EM>edge-triggered clocked</EM> memory in our designs.  However we get
+there by stages.  We first show how to build <EM>unclocked</EM>
+memory; then using <EM>unclocked</EM> memory we build
+<EM>level-sensitive clocked</EM> memory; finally from
+<EM>level-sensitive clocked</EM> memory we build <EM>edge-triggered
+clocked</EM> memory.
+
+</P><H4>Unclocked Memory</H4>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/s-r-latch.png">
+
+</P><P>
+S-R latch (set-reset)
+</P><UL>
+<LI>    ``Cross-coupled'' nor gates
+</LI><LI>    <EM>Don't</EM> assert both S and R at once
+</LI><LI>    When S is asserted (i.e., S=1 and R=0)
+        <UL>
+        <LI>the latch is <STRONG>Set</STRONG> (that's why it is called S)
+        </LI><LI>Q becomes true (Q is the output of the latch)
+        </LI><LI>Q' becomes false (Q' is the complemented output)
+        </LI></UL>
+</LI><LI>    When R is asserted
+        <UL>
+        <LI>the latch is <STRONG>Reset</STRONG>
+        </LI><LI>Q becomes false
+        </LI><LI>Q' becomes true
+        </LI></UL>
+</LI><LI>    When neither one is asserted
+        <UL>
+        <LI>The latch remains the same, i.e. Q and Q' stay as they
+        were
+        </LI><LI>This is the <EM>memory</EM> aspect
+        </LI></UL>
+</LI></UL>
+
+
+
+<H3>Clocked Memory: Flip-flops and latches
+
+<P>
+The S-R latch defined above is not clocked memory.  Unfortunately the
+terminology is not perfect.
+
+</P><P>
+For both <STRONG>flip-flops</STRONG> and
+<STRONG>latches</STRONG> the output equals the value stored in the
+structure.  Both have an input and an output (and the complemented
+output) and a clock input as well.  The clock determines when the
+internal value is set to the current input.  For a latch, the change
+occurs whenever the clock is asserted (level sensitive).  For a
+flip-flop, the change only occurs during the active edge.
+
+</P><P>
+</P></H3><H4>D latch</H4>
+
+<P>
+The D is for data
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/d-latch.png">
+
+</P><P>
+
+</P><UL>
+<LI>The left part uses the clock.
+    <UL>
+    <LI>When the clock is low, both R and S are forced low
+    </LI><LI>When the clock is high, S=D and R=D' so the value store is D
+    </LI></UL>
+</LI><LI>Output changes when input changes and the clock is asserted
+</LI><LI><EM>Level sensitive</EM> rather than <EM>edge triggered</EM>
+</LI><LI>Sometimes called a <EM>transparent</EM> latch
+</LI><LI>We won't use these in designs
+</LI><LI>The right part is the S-R (unclocked) latch we just did
+</LI></UL>
+
+<P>
+In the traces below notice how the output follows the input when the
+clock is high and remains constant when the clock is low.  We assume
+the stored value is initially low.
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/d-latch-operation.png">
+
+</P><H4>D or Master-Slave Flip-flop</H4>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/d-flop.png">
+
+</P><P>
+This was our goal.  We now have an edge-triggered, clocked memory.
+
+</P><UL>
+<LI>Built from D latches, which are transparent
+</LI><LI>The result is <EM>Not</EM> transparent
+</LI><LI>
+</LI><LI>Changes on the active edge
+</LI><LI>This one has the falling edge as active edge
+</LI><LI>Sometimes called a master-slave flip-flop
+</LI><LI>Note substructures with letters reused
+    having different meaning (block structure a la algol)
+</LI><LI>Master latch (the left one) is set during the time clock is
+    asserted. 
+    Remember that the latch is transparent, i.e. follows
+    its input when its clock is asserted.  But the second
+    latch is ignoring its input at this time.  When the
+    clock falls, the 2nd latch pays attention and the
+    first latch keeps producing whatever D was at
+    fall-time.
+</LI><LI>Actually D must remain constant for some time around
+    the active edge.
+    <UL>
+    <LI>The <EM>set-up</EM> time <EM>before</EM> the edge
+    </LI><LI>The <EM>hold</EM> time <EM>after</EM> the edge
+    </LI><LI>See diagram below
+    </LI></UL>
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/d-flop-operation.png">
+
+</P><P>
+Note how much less wiggly the output is with the master-slave flop
+than before with the transparent latch.  As before we are assuming the
+output is initially low.
+
+</P><P>
+<STRONG>Homework:</STRONG> 
+Try moving the inverter to the other latch
+What has changed?
+<!--
+Now the active edge is the rising edge
+-->
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/setup-hold.png">
+
+</P><P>
+This picture shows the setup and hold times discussed above.  It is
+crucial when building circuits with flip flops that D is stable during
+the interval between the setup and hold times.  Note that D is wild
+outside the critical interval, but that is OK.
+
+</P><P>
+<STRONG>Homework:</STRONG>
+B.18
+
+</P><HR><DIV align="center"><STRONG>start lecture #6</STRONG></DIV><HR> 
+
+<H4>Registers</H4>
+<UL>
+<LI>Basically just an array of D flip-flops
+</LI><LI>But what if you don't want to change the register during a
+particular cycle?
+</LI><LI>Introduce another input, the <EM>write line</EM>
+
+<P>
+
+<IMG src="./Class Notes for Computer Architecture_files/register-orig.png">
+
+</P><P>
+
+</P></LI><LI>The write line is used to ``gate the clock''
+    <UL>
+    <LI>The book forgot the write line.
+    </LI><LI>Clearly if the write line is high forever, the clock input to
+    the register is passed right along to the D flop and hence the
+    input to the register is stored in the D flop when the active edge
+    occurs (for us the falling edge).
+    </LI><LI>Also clear is that if the write line is low forever, the clock
+    to the D flop is always low so has no edges and no writing occurs.
+    </LI><LI>But what about changing the write line?
+    </LI><LI>Assert or deassert the write line while the clock is low and
+    keep it at this value until the clock is low again.
+    </LI><LI>Not so good!  Must have the write line correct quite a while
+    before the active edge.  That is you must know whether you are
+    writing quite a while in advance.
+    </LI><LI>Better to do things so the write line must be correct when the
+    clock is high (i.e., just before the active edge
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/register-improved.png">
+</P><P>
+
+    </P></LI><LI>An alternative is to use an <EM>active low</EM> write line,
+    i.e. have a W' input.
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/register-active-low.png">
+</P><P>
+
+    </P></LI></UL>
+</LI><LI>Must have write line and data line valid during setup and hold
+times
+</LI><LI>To do a multibit register, just use multiple D flopss.
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/register-3bit.png">
+</P></LI></UL>
+
+<P>
+</P><H4>Register File</H4>
+
+<P>
+Set of registers each numbered
+
+</P><UL>
+<LI>Supply reg#, write line, and data (if a write)
+</LI><LI>Can read and write same reg same cycle.  You read the old value and
+then the written value replaces this old value for subsequent cycles.
+</LI><LI>Often have several read and write ports so that several
+registers can be read and written during one cycle.
+</LI><LI>We will do 2 read ports and one write port since that is
+needed for ALU ops.  This is <EM>Not</EM> adequate for superscalar (or
+EPIC) or any other system where more than one operation is to be
+calculated each cycle.
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/register-file.png">
+</P><P>
+
+</P><P>
+To read just need mux from register file to select correct
+register.
+</P><UL>
+<LI>    Have one of these for each read port
+</LI><LI>Each is an n to 1 mux, b bits wide; where
+    <UL>
+    <LI>n is the number of registers (32 for MIPS)
+    </LI><LI>b is the width of each register (32 for MIPS)
+    </LI></UL>
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/read-ports.png">
+</P><P>
+
+</P><HR><DIV align="center"><STRONG>start lecture #7</STRONG></DIV><HR> 
+
+<P>
+For writes use a decoder on register number to determine which
+register to write.  Note that 3 errors in the book's figure were fixed
+</P><UL>
+<LI>decoder is log n to n
+</LI><LI>decoder outputs numbered 0 to n-1 (NOT n)
+</LI><LI>clock is needed
+</LI></UL>
+
+<P>
+The idea is to gate the write line with the output of the decoder.  In
+particular, we should perform a write to register r this cycle providing
+</P><UL>
+<LI>Recall that the inputs to a register are W, the write line, D the
+data to write (if the write line is asserted) and the clock.
+</LI><LI>The clock to each register is simply the clock input to the
+register file.
+</LI><LI>The data to each register is simply the write data to the register file.
+</LI><LI>The write line to each register is unique
+    <UL>
+    <LI>The register number is fed to a decoder.
+    </LI><LI>The rth output of the decoder is asserted if r is the
+    specified register.
+    </LI><LI>Hence we wish to write register r if
+        <UL>
+        <LI>The write line to the register file is asserted
+        </LI><LI>The rth output of the decoder is asserted
+        </LI><LI>Bingo! We just need an and gate.
+        </LI></UL>
+    </LI></UL>
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/write-port.png">
+</P><P>
+
+</P><P><STRONG>Homework:</STRONG> 20
+
+</P><H4>SRAMS and DRAMS</H4>
+<UL>
+<LI>    External interface is below
+</LI><LI>    (Sadly) we will not look inside.  Following is unofficial
+        <UL>
+        <LI>Conceptually like a register file but can't use the
+        implementation above for a large memory because there would be
+        too many wires and the muxes would be too big.
+        </LI><LI>Two stage decode
+        </LI><LI>Tri-state buffers instead of mux for SRAM.  Hence I was
+        fibbing when I said that signals always have a 1 or 0.
+        However, we will not use tristate logic (will use muxes the
+        way we build them
+        </LI><LI>DRAM latches whole row but outputs only one (or a few)
+        column(s)
+            <UL>
+            <LI>So can speed up access to elts in same Row
+            </LI><LI>Merged DRAM + CPU a modern hot topic
+            </LI></UL>
+        </LI></UL>
+</LI><LI>    Error Correction (Omitted)
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/sram.png">
+
+</P><P>
+<BIG>Note:</BIG>
+
+    There are other kinds of flip-flops T, J-K.  Also one could learn
+    about excitation tables for each.  We will <EM>not</EM> cover this
+    material (H&amp;P doesn't either).  If interested, see Mano
+
+</P><H4>Counters</H4>
+
+<P>
+A <STRONG>counter</STRONG>
+counts (naturally).  The counting is done in binary.
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/counter-1bit.png">
+</P><P>
+
+Let's look at the state transition diagram for A, the output of a
+1-bit counter.
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/counter-1bit-states.png">
+</P><P>
+
+</P><P>
+We need one flop and a combinatorial circuit.
+</P><P>
+
+<IMG src="./Class Notes for Computer Architecture_files/counter-1bit-circuit.png">
+
+</P><P>
+The flop producing A is often itself called A and the D input to this
+flop is called DA (really D sub A).
+
+</P><PRE>Current      Next ||
+   A    I R   A   || DA &lt;-- i.e. to what must I set DA
+------------------++--      in order to
+   0    0 0   0   || 0      get the desired Next A for
+   1    0 0   1   || 1      the next cycle
+   0    1 0   1   || 1
+   1    1 0   0   || 0
+   x    x 1   0   || 0
+</PRE>
+
+<P>
+But this table (without Next A) is the truth table for the
+combinatorial circuit.
+
+</P><PRE>A I R  || DA
+-------++--
+0 0 0  || 0
+1 0 0  || 1
+0 1 0  || 1
+1 1 0  || 0
+x x 1  || 0
+
+DA = R' (A XOR I)
+</PRE>
+
+<HR><DIV align="center"><STRONG>start lecture #8</STRONG></DIV><HR> 
+
+<P>
+How about a two bit counter.
+
+</P><UL>
+<LI>State diagram has 4 states 00, 01, 10, 11 and transitions from one
+to another
+</LI><LI>The circuit diagram has 2 D flops
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/counter-2bit-states.png">
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/counter-2bit-circuit.png">
+</P><P>
+
+To determine the combinationatorial circuit we could preceed as before
+
+</P><PRE>Current      Next ||
+  A B   I R  A B  || DA DB
+------------------++------
+</PRE>
+
+<P>
+This would work but we can instead think about how a counter works and
+see that.
+
+</P><PRE>DA = R'(A XOR I)
+DB = R'(B XOR AI)
+</PRE>
+
+<P><STRONG>Homework:</STRONG> 23
+
+
+</P><H2>B.6: Finite State Machines</H2>
+
+<P>
+Skipped
+
+</P><H2>B.7 Timing Methodologies</H2>
+
+<P>
+Skipped
+
+</P><H1>Chapter 1</H1>
+
+<P>
+<STRONG>Homework:</STRONG>
+READ chapter 1.  Do 1.1 -- 1.26 (really one matching question)<BR>
+Do 1.27 to 1.44 (another matching question),<BR>
+1.45 (and do 7200 RPM and 10,000 RPM),
+1.46, 1.50
+
+</P><H1>Chapter 3</H1>
+
+<P>
+<STRONG>Homework:</STRONG>
+Read sections 3.1 3.2 3.3
+
+</P><H2>3.4 Representing instructions in the Computer (MIPS)</H2>
+
+<P>
+Register file
+</P><UL>
+<LI>We just learned how to build this
+</LI><LI>32 Registers each 32 bits
+</LI><LI>Register 0 is always 0 when read and stores to register 0 are ignored
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+3.2
+
+</P><H3>R-type instruction (R for register)</H3>
+
+<PRE>    op    rs    rt    rd    shamt  funct
+    6     5     5     5      5      6
+</PRE>
+
+<P>
+The fields are quite consistent
+</P><UL>
+<LI>op is the opcode
+</LI><LI>rs,rt are source operands
+</LI><LI>rd is destination
+</LI><LI>shamt is the shift amount
+</LI><LI>funct is used for op=0 to distinguish alu ops
+    <UL>
+    <LI>alu is <EM>arithmetic and logic unit</EM>
+    </LI><LI>add/sub/and/or/not  etc.
+    </LI></UL>
+</LI></UL>
+
+<P>
+Example: add $1,$2,$3
+</P><UL>
+<LI>Machine format: 0--2--3--1--0--21
+</LI><LI>op=0, alu op
+</LI><LI>funct=21 specifies add
+</LI><LI>reg1 &lt;-- reg2 + reg3
+</LI><LI>the regs can be the same (doubles the value in the reg)
+</LI><LI>Do sub by just changing the funct
+</LI><LI>If regs are the same, clears the register
+</LI></UL>
+
+
+<H3>I-type (why I?)</H3>
+
+<PRE>    op    rs    rt   address
+    6     5     5     16
+</PRE>
+
+<P>
+</P><UL>
+<LI>rs is a source reg
+</LI><LI>rt is the destination reg <A name="byte-addressed"></A>
+</LI><LI>Transfers to/from memory, normally in words (32-bits)
+    <UL>
+    <LI>But the machine is byte addressible!
+    </LI><LI>Then how come have load/store word instead of byte?
+    </LI><LI>Ans: It has load/store byte as well, but we don't cover it.
+    </LI><LI>What if the address is not a multiple of 4:
+    </LI><LI>Ans: An error (MIPS requires aligned accesses).
+    </LI></UL>
+</LI></UL>
+
+<P>
+lw/sw $1,addr($2)
+</P><UL>
+<LI>machine format is:  op 2 1 addr
+</LI><LI>$1 &lt;-- Mem[$2+addr]<BR>
+    $1 --&gt; Mem[$2+addr]
+</LI></UL>
+
+<P>
+RISC-like properties of the MIPS architecture
+</P><UL>
+<LI>Instructions of the same length
+</LI><LI>Field sizes of R-type and I-type correspond.
+</LI><LI>The type (R-type, I-type, etc.) is determined by the opcode
+</LI><LI>Note that rs is the ref to memory for both load and store
+</LI><LI>These properties will prove helpful when we construct a MIPS processor.
+</LI></UL>
+
+<H3>Branching instruction</H3>
+
+<H4>slt (set less-then)</H4>
+
+<UL>
+<LI>R-type
+</LI><LI>Slt $3,$8,$2  
+</LI><LI>reg3 &lt;-- (if reg8 &lt; reg2 then 1 else 0)
+</LI><LI>Like other R-types: read 2nd and 3rd reg, write 1st
+</LI></UL>
+        
+<H4>beq and bne (branch (not) equal)</H4>
+
+<UL>
+<LI>I-type
+</LI><LI>beq $1,$2,L  
+</LI><LI>if reg1=reg2  then goto L
+</LI><LI>bne $1,$2,L  
+</LI><LI>if reg1!=reg2 then goto L
+</LI></UL>
+
+<H4>blt (branch if less than)</H4>
+<UL>
+<LI>I-type
+</LI><LI>blt $5,$8,L
+</LI><LI>if reg5 &lt; reg8  then goto L
+</LI><LI><STRONG><BIG>*** WRONG ***</BIG></STRONG>
+</LI><LI>There is no blt instruction.
+</LI><LI>Instead use
+<PRE>    stl $1,$5,$8
+    bne $1,$0,L
+</PRE>
+</LI></UL>
+
+<H4>ble (branch if less than or equal)</H4>
+<UL>
+<LI>There is no ``ble $5,$8,L'' instruction.
+</LI><LI>Note that $5&lt;=$8 &lt;==&gt; NOT ($8&lt;$5)
+</LI><LI>Hence we test for $8&lt;$5 and branch if false
+<PRE>    stl $1,$8,$5
+    beq $1,$0,L
+</PRE>
+</LI></UL>
+
+<H4>bgt (branch if greater than&gt;</H4>
+<UL>
+<LI>There is no ``bgt $5,$8,L'' instruction.
+</LI><LI>Note that $5&gt;$8 &lt;==&gt; $8&lt;$5
+</LI><LI>Hence we test for $8&lt;$5 and branch if true
+<PRE>    stl $1,$8,$5
+    bne $1,$0,L
+</PRE>
+</LI></UL>
+
+<H4>bge (branch if greater than or equal&gt;</H4>
+<UL>
+<LI>There is no ``bge $5,$8,L'' instruction.
+</LI><LI>Note that $5&gt;=$8 &lt;==&gt; NOT ($5&lt;$8)
+</LI><LI>Hence we test for $5&lt;$8 and branch if
+<PRE>    stl $1,$5,$8
+    beq $1,$0,L
+</PRE>
+</LI></UL>
+
+<P>
+<STRONG>Note:</STRONG>
+Please do not make the mistake of thinking that
+</P><PRE>    stl $1,$5,$8
+    beq $1,$0,L
+</PRE>
+is the same as
+<PRE>    stl $1,$8,$5
+    bne $1,$0,L
+</PRE>
+
+The negation of X &lt; Y is <EM>not</EM> Y &lt; X
+
+<P>
+<STRONG>Homework:</STRONG>
+3.12-3.17
+
+</P><H3>J-type instructions (J for jump)</H3>
+
+<PRE>        op   address
+        6     26
+</PRE>
+
+<P>
+</P><H4>j (jump)</H4>
+
+<UL>
+<LI>J type
+</LI><LI>Range is 2^26 <EM>words</EM> = 1/4 GB
+</LI></UL>
+
+<H4>jr (jump register)</H4>
+
+<UL>
+<LI>R type, but only one register
+</LI><LI>Will it be one of the source registers or the destination register?
+</LI><LI>Ans: This will be obvious when we construct the processor
+</LI></UL>
+
+<H4>jal (jump and link)</H4>
+
+<UL>
+<LI>Used for subroutine calls
+</LI><LI>J type
+</LI><LI>return address is stored in register 31
+</LI></UL>
+
+<H3>I type instructions (revisited)</H3>
+
+<UL>
+<LI>The I is for <EM>immediate</EM>
+</LI><LI>These instructions have an <EM>immediate</EM> third operand,
+    i.e., the third operand is contained in the instruction itself.
+</LI><LI>This means the operand itself and not just its address or register
+    number are contained in the instruction
+</LI></UL>
+
+<H4>addi (add immediate)</H4>
+
+<PRE>    addi $1,$2,100
+</PRE>
+
+<P>
+Why is there no subi?<BR>
+Ans: Make the immediate operand negative.
+
+</P><H4>slti (set less-than immediate)</H4>
+
+<PRE>    slti $1,$2,50
+</PRE>
+
+<HR><DIV align="center"><STRONG>**** START LECTURE #9 ****</STRONG></DIV><HR> 
+
+<STRONG><BIG>Handout Lab #1 and supporting sheets</BIG></STRONG>
+
+<P>
+</P><UL>
+<LI>Due in two weeks
+</LI></UL>
+
+<H4>lui (load upper immediate)</H4>
+
+<UL>
+<LI>How can we get a 32-bit constant into reg since we can't have a 32
+    bit immediate?
+    <OL>
+    <LI>Load the word
+        <UL>
+        <LI>Have the constant placed in the program text (via some
+            assembler directive).
+        </LI><LI>Issue lw to load the register
+        </LI><LI>But memory accesses are slow and this uses a cache entry
+        </LI></UL>
+    </LI><LI>Load shift add
+        <OL>
+        <LI>Load immediate the high order 16 bits (into the low order
+            of the register).
+        </LI><LI>Shift the register left 16 bits (filling low order with
+            zero)
+        </LI><LI>Add immediate the low order 16 bits
+        </LI><LI>Three instructions, three words of memory
+        </LI></OL>
+    </LI><LI>load-upper add
+        <UL>
+        <LI>Use lui to load immediate the high order 16 bits into the high
+            order bits and clear the low order
+        </LI><LI>Add immediate the low order 16 bits.
+        </LI><LI>lui  $4,123  -- puts 123 into top half of reg4<BR>
+            addi $4,$4,456 -- puts 456 into bottom half of reg4<BR>
+        </LI></UL>
+    </LI></OL>
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+3.1, 3.3-3.7, 3.9, 3.18, 3.37 (for fun)
+
+</P><H1>Chapter 4</H1>
+
+<STRONG>Homework:</STRONG>
+Read 4.1-4.4
+
+<P>
+<STRONG>Homework:</STRONG>
+4.1-4.9
+
+</P><H2>4.2: Signed and Unsigned Numbers</H2>
+
+<P>
+MIPS uses 2s complement (just like 8086)
+
+</P><P>
+To form the 2s complement (of 0000 1111 0000 1010 0000 0000 1111 1100)
+</P><UL>
+<LI>take the 1s complement
+</LI><LI>That is complement each bit (1111 0000 1111 0101 1111 1111 0000 0011)
+</LI><LI>Then add 1 (1111 0000 1111 0101 1111 1111 0000 0100)
+</LI></UL>
+
+<P>
+Need comparisons for signed and unsigned.
+</P><UL>
+<LI>For signed a leading 1 is smaller (negative) than a leading 0
+</LI><LI>For unsigned a leading 1 is larger than a leading 0
+</LI></UL>
+
+<H4>sltu and sltiu</H4>
+
+<P>
+Just like slt and slti but the comparison is unsigned.
+
+</P><H2>4.3: Addition and subtraction</H2>
+
+<P>
+
+To add two (signed) numbers just add them.  That is don't treat
+the sign bit special.
+
+</P><P>
+To subtract A-B, just take the 2s complement of B and add.
+
+
+</P><H4>Overflows</H4>
+
+<P>
+An overflow occurs when the result of an operatoin cannot be
+represented with the available hardware.  For MIPS this means when the
+result does not fit in a 32-bit word.
+
+</P><UL>
+<LI>We have 31 bits plus a sign bit.
+</LI><LI>The result would definitely fit in 33 bits (32 plus sign)
+</LI><LI>The hardware simply discards the carry out of the top (sign) bit
+</LI><LI>This is <EM>not</EM> wrong--consider -1 + -1
+<PRE>  11111111111111111111111111111111   (32 ones is -1)
++ 11111111111111111111111111111111
+----------------------------------
+ 111111111111111111111111111111110   Now discard the carry out
+
+  11111111111111111111111111111110   this is -2
+</PRE>
+</LI><LI>The bottom 31 bits are always correct.<BR>
+Overflow occurs when the 32 (sign) bit is set to a value and not
+the sign.
+</LI><LI>Here are the conditions for overflow
+<PRE>Operation  Operand A  Operand B  Result
+   A+B       &gt;= 0        &gt;= 0      &lt; 0
+   A+B        &lt; 0         &lt; 0     &gt;= 0
+   A-B       &gt;= 0         &lt; 0      &lt; 0
+   A-B        &lt; 0        &gt;= 0     &gt;= 0
+</PRE>
+</LI><LI>These conditions are the same as<BR>
+    CarryIn to sign position != CarryOut
+</LI></UL>
+
+<HR><DIV align="center"><STRONG>*** START LECTURE #10
+****</STRONG></DIV><HR> 
+
+<PRE>&gt; I have a question about the first lab; I'm not sure how we
+&gt; would implement a mux, would a series of if-else
+&gt; statements be an acceptable option?
+
+No.  But that is a good question.  if-then-elif...-else
+would be a FUNCTIONAL simulation.  That is you are
+simulating what the mux does but not HOW it does it.  For a
+gate level simulation, you need to implement the mux in
+terms of AND, NOT, OR, XOR and then write code link
+Fulladder.c
+
+The implementation of a two way mux in terms of AND OR NOT
+is figure B.4 on page B-9 of the text.  You need to do a 3
+way mux.
+</PRE>
+<HR>
+
+<P>
+<STRONG>Homework:</STRONG>
+(for fun) prove this last statement (4.29)
+
+</P><H4>addu, subu, addiu</H4>
+
+<P>
+These add and subtract the same the same was as add and sub,
+but do not signal overflow
+
+</P><H2>4.4: Logical Operations</H2>
+
+<H4>Shifts: sll, srl</H4>
+<UL>
+<LI>R type, with shamt used and rs <EM>not</EM> used
+</LI><LI>sll $1,$2,5<BR>
+    reg2 gets reg1 shifted left 5 bits
+</LI><LI>Why do we need both sll and srl,
+i.e, why not just have one of them and use a negative
+shift amt for the other?<BR>
+    Ans: The shift amt is only 5 bits and need shifts from 0 to 31
+bits.  Hence not enough bits for negative shifts.
+</LI><LI>Op is 0 (these are ALU ops, will understand why in a few weeks).
+</LI></UL>
+
+<H4>Bitwise AND and OR: and, or, andi, ori</H4>
+
+<P>
+No surprises.
+
+</P><UL>
+<LI>and $r1,$r2,$r3<BR>
+    or $r1,$r2,$r3
+</LI><LI>standard R-type instruction
+</LI><LI>andi $r1,$r2,100<BR>
+    ori  $r1,$r2,100<BR>
+</LI><LI>standard I-type
+</LI></UL>
+
+<H2>4.5: Constructing an ALU--the fun begins</H2>
+
+<P>
+First goal is 32-bit AND, OR, and addition
+
+</P><P>
+Recall we know how to build a full adder.  Will draw it as
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/adder-dia.png">
+
+</P><P>
+With this adder, the ALU is easy.
+</P><UL>
+<LI>Just choose the correct operation (ADD, AND, OR)
+</LI><LI>Note the principle that if you want a logic box that sometimes
+computes X and sometimes computes Y, what you do is
+    <OL>
+    <LI>Compute X and also compute Y
+    </LI><LI>Put both X and Y into a mux
+    </LI><LI>Use the ``sometimes'' condition as the select line to the mux
+    </LI></OL>
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/alu-1bit.png">
+
+</P><P>
+32-bit version is simple.  
+</P><OL>
+<LI>Use an array of logic elements for the logic.  The logic element
+is the 1-bit ALU
+</LI><LI>Use buses for A, B, and Result.
+</LI><LI>``Broadcast'' Opcode to all of the internal 1-bit ALUs.  This
+means wire the external Opcode to the Opcode input of each of the
+internal 1-bit ALUs
+</LI></OL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/alu-32bit.png">
+</P><P>
+
+First goal accomplished.
+
+</P><P>
+How about subtraction?
+
+</P><UL>
+<LI>Big deal about 2's compliment is that<BR>
+    A - B = A + (2's comp B) = A + (B' + 1)
+</LI><LI>Get B' from an inverter (naturally)
+</LI><LI>Get +1 from the CarryIn
+</LI></UL>
+
+<P>
+1-bit ALU with ADD, SUB, AND, OR is 
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/alu-sub-1bit.png">
+
+</P><P>
+For subtraction set Binvert and Cin.
+
+</P><P>
+32-bit version is simply a bunch of these.  
+</P><UL>
+<LI>For subtraction assert both B-invert and Cin.
+</LI><LI>For addition de-assert both B-invert and Cin.
+</LI><LI>For AND and OR d-assert B-invert.  Cin is a don't care
+</LI></UL>
+
+<P>
+<IMG src="./Class Notes for Computer Architecture_files/alu-sub-32bit.png">
+</P><P>
+
+</P><H2>Simulating Combinatorial Circuits at the Gate Level</H2>
+
+<P>
+Write a procedure for each logic box with the following properties.
+
+</P><UL>
+<LI>Parameters for each input and output
+</LI><LI>(Local) variable for each (internal) wire
+</LI><LI>Can only do AND OR XOR NOT
+    <UL>
+    <LI>In the C language &amp; | ^ ~
+    </LI><LI>Other languages similar
+    </LI></UL>
+</LI><LI>No conditional assignment; the output is a FUNCTION of the input
+</LI><LI>Single assignment to each variable.<BR>
+    Multiple assignments would correspond to a cycle
+</LI><LI>Bus (set of signals) represented by array
+</LI><LI>Testing
+    <UL>
+    <LI>Exhaustive possible for 1-bit cases
+    </LI><LI>Cleverness for n-bit cases (n=32, say)
+    </LI></UL>
+</LI></UL>
+
+<P>
+<BIG>Handout:</BIG> <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/FullAdder.c">FullAdder.c</A>  
+and <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/FourBitAdder.c">FourBitAdder.c</A>.  
+
+</P><P>
+<BIG>Lab 1:</BIG> Do the equivalent for 1-bit-alu (without
+subtraction).  This is easy.  Lab 2 will be similar but for a
+more sophisticated ALU.
+
+</P><P>
+Extra requirements for MIPS alu: 
+</P><OL>
+<LI>
+    slt  set-less-than
+    <UL><BR>
+    <LI>
+        Result reg is 1 if a &lt; b<BR>
+        Result reg is 0 if a &gt;= b<BR><BR>
+    </LI><LI>
+        So need to set the LOB (low order bit, aka least significant bit)
+        of the result equal to the sign bit of a subtraction, and set the
+        rest of the result bits to zero.<BR><BR>
+    </LI><LI>
+        Idea #1.  Give the mux another input, called LESS.
+        This input is brought in from outside the bit cell.
+        That is, if the opcode is slt we make the select line to the
+        mux equal to 11 (three) so that the the output is the this new
+        input.  For all the bits except the LOB, the LESS input is
+        zero.  For the LOB we must figure out how to set LESS.
+    </LI></UL><BR>
+
+<IMG src="./Class Notes for Computer Architecture_files/alu-less.png"><BR><BR>
+
+    <UL>
+    <LI>
+        Idea #2.  Bring out the result of the adder (BEFORE the mux)<BR><BR>
+        Only needed for the HOB (high order bit, i.e. sign) Take this
+        new output from the HOB, call it SET and connect it to the
+        LESS input in idea #1 for the LOB.  The LESS input for other
+        bits are set to zero.<BR><BR>
+    </LI></UL><BR>
+
+<IMG src="./Class Notes for Computer Architecture_files/alu-set.png"><BR><BR>
+
+    </LI><LI>
+        Why isn't this method used?<BR><BR>
+    </LI><LI>
+        Ans: It is wrong!<BR><BR>
+    </LI><LI>
+        Example using 3 bit numbers (i.e. -4 .. 3).
+        Try slt on -3 and +2.
+        True subtraction (-3 - +2) give -5.
+        The negative sign in -5 indicates (correctly) that -3 &lt; +2.
+        But three bit subtraction -3 - +2 gives +3 !  Hence we will
+        incorrectly conclude that -3 is NOT less than +2.
+        (Really, it signals an <EM>overflow.</EM> unless doing unsigned)<BR><BR>
+    </LI><LI>
+        Solution: Need the correct rule for less than (not just sign of
+        subtraction)<BR><BR>
+    
+
+
+<STRONG>Homework:</STRONG> figure out correct rule, i.e. prob 4.23.
+Hint: when an overflow occurs the sign bit is definitely wrong (so the
+complement of the sign bit is right).
+<P>
+
+</P><OL start="2">
+<LI>
+    Overflows
+    <UL>
+    <LI>The HOB is already unique (outputs SET)
+    </LI><LI>Need to enhance it some more to produce the overflow output
+    </LI><LI>Recall that we gave the rule for overflow: you need to examine
+        <UL>
+        <LI>Whether add or sub (binvert)
+        </LI><LI>The sign of A
+        </LI><LI>The sign of B
+        </LI><LI>The sign of the result
+        </LI><LI>Since this is the HOB we have all the sign bits.
+        </LI><LI>The book also uses Cout, but this appears to be an error
+        </LI></UL>
+    </LI></UL><BR>
+
+<IMG src="./Class Notes for Computer Architecture_files/alu-overflow.png"><BR><BR>
+
+</LI><LI>
+    Simpler overflow detection
+    <UL>
+    <LI>An overflow occurs if and only if the carry in to the HOB
+    differs from the carry of of the HOB
+    </LI></UL><BR>
+
+<IMG src="./Class Notes for Computer Architecture_files/alu-overflow-better.png"><BR><BR>
+
+</LI><LI>
+    Zero Detect
+    <UL>
+    <LI>To see if all bits are zero just need NOR of all the bits
+    </LI><LI>Conceptually trivially but does require some wiring
+    </LI></UL><BR>
+
+</LI><LI>
+    <STRONG>Observation:</STRONG> The initial Cin and Binvert are always
+    the same.  So just use one input called Bnegate.
+
+</LI></OL>
+
+<P>
+The Final Result is 
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/alu32-final.png"></P><P>
+
+</P><P>
+Symbol for the alu is 
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/alu-symbol.png">
+
+</P><P>
+What are the control lines?
+</P><UL>
+<LI>
+    Bnegate (1 bit)
+</LI><LI>
+    OP (2 bits)
+</LI></UL>
+
+<P>
+What functions can we perform?
+</P><UL>
+<LI>
+    and
+</LI><LI>
+    or
+</LI><LI>
+    add
+</LI><LI>
+    sub
+</LI><LI>
+    set on less than
+</LI></UL>
+
+<P>
+What (3-bit) values for the control lines do we need for each function?
+
+<TABLE>
+<TBODY><TR><TD>and</TD><TD>0</TD><TD>00</TD></TR>
+
+   <TR> <TD>or</TD><TD>  0</TD><TD> 01</TD></TR>
+
+    <TR> <TD>add</TD><TD> 0</TD><TD> 10</TD></TR>
+
+    <TR> <TD>sub</TD><TD> 1</TD><TD> 10</TD></TR>
+
+    <TR> <TD>slt</TD><TD> 1</TD><TD> 11</TD></TR>
+</TBODY></TABLE>
+
+</P><HR><DIV align="center"><STRONG>*** START LECTURE #11 ****</STRONG></DIV><HR> 
+
+<P>
+Adders
+</P><OL>
+<LI>
+    We have done what is called a ripple carry adder.<BR>
+    The carry "ripples" from one bit to the next (LOB to HOB).<BR>
+    So the time required is proportional to the wordlength.<BR>
+    Each carry can be computed with two levels of logic (any function
+    can be so computed) hence the number of gate delays is 2*wordsize.
+</LI><LI>
+    What about doing the entire 32 (or 64) bit adder with 2 levels of
+    logic?
+    <UL>
+    <LI>
+        Such a circuit clearly exists.  Why?
+    </LI><LI>
+        Ans: A two levels of logic circuit exists for <EM>any</EM>
+        function.
+    </LI><LI>
+        But it would be very expensive: many gates and wires.
+    </LI><LI>
+        The <BIG>big</BIG> problem: The AND and OR gates have high
+        fan-in, i.e., they have a large number of inputs.  It is
+        <EM>not</EM> true that a 64-input AND takes the same time as a
+        2-input AND.
+    </LI><LI>
+        Unless you are doing full custom VLSI, you get a toolbox of
+        primative functions (say 4 input NAND) and must build from that
+    </LI></UL>
+</LI><LI>
+    There are faster adders, e.g. carry lookahead and carry save.  We
+    will study the carry lookahead.
+</LI></OL>
+
+<H4>Carry Lookahead adders</H4>
+
+<P>
+We did a ripple adder
+
+</P><UL>
+<LI>The delay proportional to # bits.
+</LI><LI>In detail, each bit the CarryOut uses two levels of logic after
+the CarryIn is stable.
+</LI><LI>So the delay for calculating an n-bit sum is 2n gate delays.
+</LI><LI>For 4 bits the delay is 8
+</LI><LI>For 16, delay is 32
+</LI><LI>For 32, delay is 64
+</LI><LI>For 64, delay is 128
+</LI></UL>
+
+<P>We will now do the carry lookahead adder, which is much faster,
+especially for many bit (e.g. 64 bit) addition.
+
+</P><P>
+For each bit we can in one gate delay calculate
+
+</P><PRE>    generate a carry    gi = ai bi
+
+    propogate a carry   pi = ai+bi
+</PRE>
+
+<P>H&amp;P give a <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/hp-figs-4.22.pdf">plumbing analogue</A>
+for generate and propogate.
+
+</P><P>
+Given the generates and propogates, we can calculate all the carries
+for a 4-bit addition (recall that c0=Cin is an input) as follows
+
+</P><PRE>c1 = g0 + p0 c0
+
+c2 = g1 + p1 c1 = g1 + p1 g0 + p1 p0 c0
+
+c3 = g2 + p2 c2 = g2 + p2 g1 + p2 p1 g0 + p2 p1 p0 c0
+
+c4 = g3 + p3 c3 = g3 + p3 g2 + p3 p2 g1 + p3 p2 p1 g0 + p3 p2 p1 p0 c0
+</PRE>
+
+<P>
+Thus we can calculate c1 ... c4 in just two additional gate delays
+(where we assume one gate can accept upto 5 inputs).  Since we get gi
+and pi after one gate delay, the total delay for calculating all the
+carries is 3 (this includes c4=CarryOut)
+
+</P><P>Each bit of the sum si can be calculated in 2 gate delays given ai,
+bi, and ci.  Thus 5 gate delays after we are given a, b and CarryIn,
+we have calculated s and CarryOut
+
+</P><P>
+<IMG src="./Class Notes for Computer Architecture_files/4-bit-cla.png">
+
+</P><P>So for 4-bit addition the faster adder takes time 5 and the slower
+adder time 8.
+
+</P><P>Now we want to put four of these together to get a fast 16-bit
+adder.  Again we are assuming a gate can accept upto 5 inputs.  It
+is important that the number of inputs per gate does not grow with the
+size of the numbers to add.  If the technology available supplies only
+4-input gates, we would use groups of 3 bits rather than four.
+
+</P><P>We start by determining ``supergenerate'' and ``superpropogate''
+bits.  The super propogate indicates whether the <STRONG>4-bit
+adder</STRONG> constructed above generates a CarryOut or propogates a
+CarryIn to a CarryOut
+
+</P><PRE>P0 = p3 p2 p1 p0          Does the low order 4-bit adder
+                          propogate a carry?
+P1 = p7 p6 p5 p4
+
+P2 = p11 p10 p9 p8
+
+P3 = p15 p14 p13 p12      Does the high order 4-bit adder
+                          propogate a carry?
+
+
+G0 = g3 + p3 g2 + p3 p2 g1 + p3 p2 p1 g0        Does low order 4-bit
+                                                adder generate a carry
+G1 = g7 + p7 g6 + p7 p6 g5 + p7 p6 p5 g4
+
+G2 = g11 + p11 g10 + p11 p10 g9 + p11 p10 p9 g8
+
+G3 = g15 + p15 g14 + p15 p14 g13 + p15 p14 p13 g12
+
+
+C1 = G0 + P0 c0
+
+C2 = G1 + P1 C1 = G1 + P1 G0 + P1 P0 c0
+
+C3 = G2 + P2 C2 = G2 + P2 G1 + P2 P1 G0 + P2 P1 P0 c0
+
+C4 = G3 + P3 C3 = G3 + P3 G2 + P3 P2 G1 + P3 P2 P1 G0 + P3 P2 P1 P0 c0
+</PRE>
+
+<P>
+From these C's you just need to do a 4-bit CLA since the C's are
+the CarryIns for each group of 4-bits out of the 16-bits.
+
+</P><P>How long does this take, again assuming 5 input gates?
+</P><UL>
+<LI>We calculate the P's one gate delay after we have  the p's.  Since
+the pj's are determined 1 gate delay after we are given the a's and
+b's.  So we have all Pi 2 gate delays after we start.
+</LI><LI>The G's are determined 2 gate delays after we have the g's and
+p's.  So the G's are done 3 gate delays after we start.
+</LI><LI>The C's are determined 2 gate delays after the P's and G's.  So
+the C's are done 5 gate delays after we start.
+</LI><LI>Now the C's are sent back to the 4-bit adders, which have already
+calculated the p's and g's.  Hence the c's are calculated in 2 more
+gate delays (7 total) and the s's 2 more after that (9 total).
+</LI><LI>So a 16-bit CLA takes 9 cycles instead of 32 for a ripple carry adder.
+</LI></UL>
+
+<P>Some pictures follow.
+
+</P><P>Take our original picture of the 4-bit CLA and collapse the details
+so it looks like.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/4-bit-cla-abstract.png">
+
+</P><P>Next include the logic to calculate P and G
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/4-bit-cla-PG.png">
+
+</P><P>Now put four of these with a CLA block (to calculate C's from P's,
+G's and Cin) and we get a 16-bit CLA.  Note that we do not use the Cout
+from the 4-bit CLAs.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/16-bit-cla.png">
+
+</P><P>Note that the tall skinny box is general.  It takes 4 Ps 4Gs and
+Cin and calculates 4Cs.  The Ps can be propogates, superpropogates,
+superduperpropogates, etc.  That is, you take 4 of these 16-bit CLAs
+and the same tall skinny box and you get a 64-bit CLA.
+
+</P><P>
+<STRONG>Homework:</STRONG>
+4.44, 4.45
+
+</P><HR><DIV align="center"><STRONG>*** START LECTURE #12 ****</STRONG></DIV><HR>
+
+<P>As noted just above the tall skinny box is useful for all size
+CLAs.  To expand on that point and to review CLAs, let's redo CLAs with
+the general box.
+
+</P><P>Since we are doing 4-bits at a time, the box takes 9=2*4+1 input bits
+and produces 6=4+2 outputs
+</P><UL>
+<LI>Inputs
+    <UL>
+    <LI>4 generate bits from the previous size (i.e. if now doing a
+    64-bit CLA, these are the generate bits from the four 16-bit
+    CLAs).  Let's call these bits Gin0, Gin1, Gin2, Gin3.
+    </LI><LI>4 propogate bits from the previous size Pin0, Pin1, Pin2,
+    Pin3.
+    </LI><LI>The Carry in Cin
+    </LI></UL><BR>
+</LI><LI>Outputs
+    <UL>
+    <LI>Four carries C1, C2, C3, and C4 to be used in the previous
+    size 
+        <UL>
+        <LI>Cin is also called C0 and is used in the previous size as
+        well as in this box.
+        </LI><LI>C4 is also called Cout.  It is the carry out from this
+        size, but is <EM>not</EM> used in the <EM>next</EM> size
+        </LI></UL>
+    </LI><LI>Gout and Pout, the generate and propogate to be used in the
+    <EM>next</EM> size
+    </LI></UL><BR>
+</LI><LI>Formulas
+<PRE>C1 = G0 + PO Cin
+C2 = G1 + P1 G0 + P1 P0 Cin
+C3 = G2 + P2 G1 + P2 P1 G0 + P2 P1 P0 Cin
+C4 = G3 + P3 G2 + P3 P2 G1 + P3 P2 P1 G0 + P3 P2 P1 P0 Cin
+
+Gout = G3  +  P3 G2  +  P3 P2 G1  +  P3 P2 P1 Go
+Pout = P3 P2 P1 P0
+
+</PRE>
+</LI><LI>Picture
+<P><IMG src="./Class Notes for Computer Architecture_files/cla-block.png">
+</P></LI></UL>    
+
+<P>A 4-bit adder is now
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/cla-4bit.png"></P><P>
+
+</P><P>What does the ``?'' box do?
+</P><UL>
+<LI>Calculates Gi and Pi based on ai and bi
+    <UL>
+    <LI>Gi = ai bi
+    </LI><LI>Pi = ai + bi
+    </LI></UL><BR>
+
+</LI><LI>Calculate s1 based on ai, bi, and Ci=Cin (normal full adder)<BR><BR>
+
+</LI><LI>Do not bother calculating Cout
+</LI></UL>
+
+<P>Now take four of these 4-bit adders and use the <EM>identical</EM>
+CLA box to get a 16-bit adder
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/cla-16bit.png"></P><P>
+
+</P><P>Four of these 16-bit adders with the <EM>identical</EM>
+CLA box to gives a 64-bit adder.
+
+
+</P><H4>Shifter</H4>
+<UL>
+<LI>
+    Just a string of D-flops; output of one is input of next
+    <UL>
+    <LI>
+        Input to first is the <EM>serial input</EM>.
+    </LI><LI>
+        Output of last is the <EM>serial output</EM>.
+    <P><IMG src="./Class Notes for Computer Architecture_files/shifter-trivial.png">
+    </P></LI></UL><BR>
+    
+</LI><LI>
+    We want more.
+    <UL>
+    <LI>
+        Left and right shifting (with serial input/output)
+    </LI><LI>
+        Parallel load
+    </LI><LI>
+        Parallel Output
+    </LI><LI>
+        Don't shift every cycle
+    </LI></UL>
+</LI><LI>
+    Parallel output is just wires.
+</LI><LI>
+    Shifter has 4 modes (left-shift, right-shift, nop, load) so
+    <UL>
+    <LI>
+        4-1 mux inside
+    </LI><LI>
+        2 control lines must come in
+    </LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/shifter.png"></P><P>
+
+</P></LI><LI>
+    We could modify our registers to be shifters (bigger mux), but ...
+</LI><LI>
+    Our shifters are slow for big shifts; ``barrel shifters'' are better
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+           A 4-bit shift register initially contains 1101.  It is
+           shifted six times to the right with the serial input being
+           101101.  What is the contents of the register after each
+           shift.
+
+</P><P>
+<STRONG>Homework:</STRONG>
+           Same register, same init condition.  For
+           the first 6 cycles the opcodes are left, left, right, nop,
+           left, right and the serial input is 101101.  The next cycle
+           the register is loaded (in parallel) with 1011.  The final
+           6 cycles are the same as the first 6.  What is the contents
+           of the register after each cycle?
+
+</P><H4>Multipliers</H4>
+<UL>
+<LI>
+    Recall how to do multiplication.
+    <UL>
+    <LI>
+        Multiplicand times multiplier gives product
+    </LI><LI>
+        Multiply multiplicand by each digit of multiplier
+    </LI><LI>
+        Put the result in the correct column
+    </LI><LI>
+        Then add the partial products just produced
+    </LI></UL><BR>
+    
+</LI><LI>
+    We will do it the same way ...<BR>
+    ... but differently
+    <UL><BR>
+    
+    <LI>
+        We are doing binary arithmetic so each ``digit'' of the
+        multiplier is 1 or zero.<BR><BR>
+    </LI><LI>
+        Hence ``multiplying'' the mulitplicand by a digit of the
+        multiplier means either
+        <UL>
+        <LI>
+            Getting the multiplicand
+        </LI><LI>
+            Getting zero
+        </LI></UL><BR>
+        
+    </LI><LI>
+        Use an ``if appropriate bit of multiplier is 1'' stmt<BR><BR>
+        
+    </LI><LI>
+        To get the ``appropriate bit''
+        <UL>
+        <LI>
+            Start with the LOB of the multiplier
+        </LI><LI>
+            Shift the multiplier right (so the next bit is the LOB)
+        </LI></UL><BR>
+        
+    </LI><LI>
+        Putting in the correct column means putting it one column
+        further left that the last time.<BR><BR>
+
+    </LI><LI>
+        This is done by shifting the
+        multiplicand left one bit each time (even if the multiplier
+        bit is zero)<BR><BR>
+        
+    </LI><LI>
+        Instead of adding partial products at end, keep a running sum
+        <UL>
+        <LI>
+            If the multiplier bit is zero add the (shifted)
+            multiplicand to the running sum
+        </LI><LI>
+            If the bit is zero, simply skip the addition.
+        </LI></UL>
+    </LI></UL><BR>
+    
+</LI><LI>
+    This results in the following algorithm
+</LI></UL>
+
+<PRE>    product &lt;- 0
+    for i = 0 to 31
+        if LOB of multiplier = 1
+            product = product + multiplicand
+        shift multiplicand left 1 bit
+        shift multiplier right 1 bit
+</PRE>
+
+<P>
+Do on board 4-bit addition (8-bit registers) 1100 x 1101
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/multiplier-1.png">
+
+</P><P>
+What about the control?
+</P><UL>
+<LI>
+    Always give the ALU the ADD operation
+</LI><LI>
+    Always send a 1 to the multiplicand to shift left
+</LI><LI>
+    Always send a 1 to the multiplier to shift right
+</LI><LI>
+    Pretty boring so far but
+    <UL>
+    <LI>
+        Send a 1 to write line in product if and only if
+        LOB multiplier is a 1
+</LI><LI>
+        I.e. send LOB to write line
+</LI><LI>
+        I.e. it really is pretty boring
+    </LI></UL>
+</LI></UL>
+
+<HR><DIV align="center"><STRONG>*** START LECTURE #13 ****</STRONG></DIV><HR> 
+
+<P>
+This works!<BR>
+but, when compared to the better solutions to come, is wasteful of
+resourses and hence is
+</P><UL>
+<LI>
+    slower
+</LI><LI>
+    hotter
+</LI><LI>
+    bigger
+</LI><LI>
+    all these are bad
+</LI></UL>
+
+<P>
+The product register must be 64 bits since the product is 64 bits
+
+</P><P>
+Why is multiplicand register 64 bits?
+</P><UL>
+<LI>
+    So that we can shift it left
+</LI><LI>
+    I.e., for our convenience.  <BR>
+    By this I mean it is not required by the problem specification,<BR>
+    but only by the solution method chosen.
+</LI></UL>
+
+<P>
+Why is ALU 64-bits?
+</P><UL>
+<LI>
+    Because the product is 64 bits
+</LI><LI>
+    But we are only adding a 32-bit quantity to the
+    product at any one step.
+</LI><LI>
+    Hmmm.
+</LI><LI>
+    Maybe we can just pull out the correct bits from the product.
+</LI><LI>
+    Would be tricky to pull out bits in the middle
+    because which bits to pull changes each step
+</LI></UL>
+
+<P>
+POOF!!  ... as the smoke clears we see an idea.
+
+</P><P>
+We can solve both problems at once
+</P><UL>
+<LI>
+    DON'T shift the multiplicand left
+    <UL>
+    <LI>
+        Hence register is 32-bits.
+    </LI><LI>
+        Also register need not be a shifter
+    </LI></UL><BR>
+    
+</LI><LI>
+    Instead shift the product right!<BR><BR>
+
+</LI><LI>
+    Add the high-order (HO) 32-bits of product register to
+    multiplicand and place result back into HO 32-bits
+    <UL>
+    <LI>
+        Only do this if the current multiplier bit is one.<BR><BR>
+   
+    </LI><LI>
+        Use the Carry Out of the sum as the new bit to shift
+        in<BR><BR>
+        
+    </LI><LI>
+        The book forgot the last point but their example used numbers
+        too small to generate a carry
+   </LI></UL>
+</LI></UL>
+
+<P>
+This results in the following algorithm
+
+</P><PRE>    product &lt;- 0
+    for i = 0 to 31
+        if LOB of multiplier = 1
+            (serial_in, product[32-63]) &lt;- product[32-63] + multiplicand
+        shift product right 1 bit
+        shift multiplier right 1 bit
+</PRE>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/multiplier-2.png">
+
+</P><P>
+What about control
+</P><UL>
+<LI>
+    Just as boring as before
+</LI><LI>
+    Send (ADD, 1, 1)  to (ALU, multiplier (shift right), Product (shift right))
+</LI><LI>
+    Send LOB to Product (write)
+</LI></UL>
+
+<P>
+Redo same example on board
+
+</P><P>
+A final trick (``gate bumming'', like code bumming of 60s)
+</P><UL>
+<LI>
+    There is a waste of registers, i.e. not full unilization
+    <UL>
+    <LI>
+        The multiplicand is fully unilized since we always need all 32 bits
+    </LI><LI>
+        But once we use a multiplier bit, we can toss it so we need
+        less and less of the multiplier as we go along
+    </LI><LI>
+        And the product is half unused at beginning and only slowly ...
+    </LI><LI>
+        POOF!!
+    </LI></UL><BR>
+    
+</LI><LI>
+    ``Timeshare'' the LO half of the ``product register''
+    <UL>
+    <LI>
+        In the beginning LO half contains the multiplier
+    </LI><LI>
+        Each step we shift right and more goes to product
+        less to multiplier
+    </LI></UL><BR>
+    
+</LI><LI>
+    The algorithm changes to
+</LI></UL>
+
+<PRE>    product[0-31] &lt;- multiplier
+    for i = 0 to 31
+        if LOB of product = 1
+            (serial_in, product[32-63]) &lt;- product[32-63] + multiplicand
+        shift product right 1 bit
+</PRE>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/multiplier-3.png">
+
+</P><P>Control again boring
+</P><UL>
+<LI>Send (ADD, 1) to (ALU, Product (shift right))
+</LI><LI>Send LOB to Product (write)
+</LI></UL>
+
+<P>
+Redo same example on board
+
+</P><P>
+The above was for unsigned 32-bit multiplication
+
+</P><P>
+For signed multiplication
+</P><UL>
+<LI>
+    Save the signs of the multiplier and multiplicand
+</LI><LI>
+    Convert multiplier and multiplicand to non-neg numbers
+</LI><LI>
+    Use above algorithm
+</LI><LI>
+    Only use 31 steps not 32 since there are only 31 multiplier bits
+    (the HOB of the multiplier is the sign bit, not a bit used for
+    multiplying)
+</LI><LI>
+    Compliment product if original signs were different
+</LI></UL>
+
+<P>
+There are faster multipliers, but we are not covering them.
+
+</P><P>
+We are skiping division.
+
+</P><P>
+We are skiping floating point.
+
+</P><P>
+<STRONG>Homework:</STRONG>
+Read 4.11 ``Historical Perspective''.
+
+</P><HR><DIV align="center"><STRONG>*** START LECTURE #14
+****</STRONG></DIV><HR> 
+
+Midterm Exam
+
+<HR><DIV align="center"><STRONG>*** START LECTURE #15
+****</STRONG></DIV><HR> 
+
+<P>
+Lab 2.  Due in three weeks.  Modify lab 1 to deal with sub, slt, zero detect,
+overflow.  Also lab 2 is to be 32 bits. That is, Figure 4.18.
+
+</P><P>Go over the exam.
+
+</P><H1>Chapter 5: The processor: datapath and control</H1>
+
+<P><STRONG>Homework:</STRONG>
+Start Reading Chapter 5.
+
+</P><H2>5.1: Introduction</H2>
+
+<P>We are going to build the MIPS processor
+
+</P><P>Figure 5.1 redrawn below shows the main idea
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-abstract.png">
+
+</P><P>Note that the instruction gives the three register numbers as well
+as an immediate value to be added.
+
+</P><UL>
+<LI>No instruction actually does all this
+</LI><LI>We have datapaths for all possibilities
+</LI><LI>Will see how we arrange for only certain datapaths to be used for
+each instruction type
+    <UL>
+    <LI>For example R type uses all three registers but not the
+    immediate field
+    </LI><LI>The I type uses the immediate but not all three registers
+    </LI></UL>
+</LI><LI>The memory address for a load or store is the sum of a register
+and an immediate
+</LI><LI>The data value to be stored comes from a register
+</LI></UL>
+
+<H2>5.2: Building a datapath</H2>
+
+<P>Let's begin doing the pieces in more detail.  
+
+</P><H4>Instruction fetch</H4>
+
+<P>We are ignoring branches for now.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-ifetch.png">
+
+</P><UL>
+<LI>How come no write line for the PC register?
+</LI><LI>Ans: We write it every cycle.
+</LI><LI>How come no control for the ALU
+</LI><LI>Ans: This one always adds
+</LI></UL>
+
+<H4>R-type instructions</H4>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/datapath-R-type.png">
+
+</P><UL>
+<LI>``Read'' and ``Write'' in the diagram are adjectives not verbs.
+</LI><LI>The 32-bit bus with the instruction is divided into three 5-bit
+buses for each register number (plus other wires not shown).
+</LI><LI>Two read ports and one write port, just as we learned in chapter 4
+</LI><LI>The 3-bit control consists of Bnegate and Op from chapter 4
+</LI></UL>
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #16
+========</BIG></STRONG></DIV><HR> 
+
+
+<STRONG><BIG>Don't forget the mirror site.  My main website will be
+going down for an OS upgrade. Start at http://cs.nyu.edu/</BIG></STRONG>
+
+<H4>load and store</H4>
+
+<PRE>lw  $r,disp($s)
+sw  $r,disp($s)
+</PRE>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/datapath-load-store.png">
+
+</P><UL>
+<LI>lw $r,disp($s): 
+    <OL>
+    <LI>Computes the effective address formed by adding the 16-bit
+    immediate constant ``disp'' to the contents of register $s.
+    </LI><LI>Fetches the value from this address.
+    </LI><LI>Inserts this value into register $r
+    </LI></OL>
+</LI><LI>sw $r,disp($s):
+    <OL>
+    <LI>Computes the same effective address as lw $r,disp($s)
+    </LI><LI>Stores the contents of register $r into this address
+    </LI></OL>
+</LI><LI>We have a 32-bit adder so need to extend the 16-bit immediate
+constant to 32 bits.  Produce an additional 16 HOBs all equal to the
+sign bit of the 16-bit immediate constant.  This is called <EM>sign
+extending</EM> the constant.
+</LI><LI>I previously said that the address was a word address and that the
+hardware shifted the address 2 bits.  This is <EM>wrong</EM> and has
+been <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/class-notes.html#byte-addressed">corrected</A>.
+</LI></UL>
+
+<P>There is a cheat here.
+</P><UL>
+<LI>For lw we read register r (and read s)
+</LI><LI>For sw we write register r (and read s)
+</LI><LI>But we indicate that the same bits in the register always go to
+the same ports in the register file.
+</LI><LI>We are ``mux deficient''.
+</LI><LI>We will put in the mux later
+</LI></UL>
+
+<H4>Branch on equal (beq)</H4>
+
+<P>Compare two registers and branch if equal
+
+</P><UL>
+<LI>To check for equal we subtract and test for zero (our ALU does
+this)
+</LI><LI>If $r=$s, the target of the branch beq $r,$s,disp is the sum of
+    <OL>
+    <LI>The program counter PC <EM>after</EM> it has been incremented,
+    that is the address of the next sequential instruction
+    </LI><LI>The 16-bit immediate constant ``disp'' (treated as a signed
+    number) left shifted 2 bits.
+    </LI></OL>
+</LI><LI>The value of PC after the increment is available.  We computed it
+in the basic instruction fetch datapath.
+</LI><LI>Since the immediate constant is signed it must be sign extended.
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/datapath-beq.png"></P><P>
+
+</P><UL>
+<LI>The top ``alu symbol'' labeled ``add'' is just an adder so does
+not need any control
+</LI><LI>The shift left 2 is not a shifter.  It simply moves wires and
+includes two zero wires.  We need a 32-bit version.  Below is a 5 bit
+version.
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/shift-left-2.png"></P><P>
+
+</P><H3>5.3: A simple implementation scheme</H3>
+
+<P>
+We will just put the pieces together and then figure out the control
+lines that are needed and how to set them.  We are not now worried
+about speed.
+
+</P><P>
+We are assuming that the instruction memory and data memory are
+separate.  So we are not permitting self modifying code.  We are not
+showing how either memory is connected to the outside world (i.e. we
+are ignoring I/O).
+
+</P><P>
+We have to use the same register file with all the pieces since when a
+load changes a register a subsequent R-type instruction must see the
+change, when an R-type instruction makes a change the lw/sw must see
+it (for loading or calculating the effective address, etc.
+
+</P><P>
+We could use separate ALUs for each type but it is easy not to so we
+will use the same ALU for all.  We do have a separate adder for
+incrementing the PC.
+
+</P><H4>Combining R-type and lw/sw</H4>
+
+<P>The problem is that some inputs can come from different sources.
+
+</P><OL>
+<LI>For R-type, both ALU operands are registers.  For I-type (lw/sw)
+the second operand is the (sign extended) immediate field.
+</LI><LI>For R-type, the write data comes from the ALU.  For lw it comes
+from the memory.
+</LI><LI>For R-type, the write register comes from field rd, which is bits
+15-11.  For sw, the write register comes from field rt, which is bits
+20-16.
+</LI></OL>
+
+<P>
+We will deal with the first two now by using a mux for each.  We
+will deal with the third shortly by (surprise) using a mux.
+
+</P><H4>Combining R-type and lw/sw</H4>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/datapath-R-type-lw-sw-small.png"></P><P>
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-R-type-lw-sw.png"></P><P>
+
+</P><H4>Including instruction fetch</H4>
+
+<P>
+This is quite easy
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-R-type-lw-sw-ifetch-small.png"></P><P>
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-R-type-lw-sw-ifetch.png"></P><P>
+
+</P><H4>Finally, beq</H4>
+
+<P>
+We need to have an ``if stmt'' for PC (i.e., a mux)
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-full-small.png"></P><P>
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-full.png"></P><P>
+
+
+</P><P>
+<STRONG>Homework:</STRONG>
+</P><UL>
+<LI>5.5 and 5.8 (just datapaths not control)
+</LI><LI>5.9
+</LI></UL>
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #17
+========</BIG></STRONG></DIV><HR> 
+
+<H3>The control for the datapath</H3>
+
+<P>
+We start with our last figure, which shows the data path and then add
+the missing mux and show how the instruction is broken down.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-final-small.png">
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath-final.png">
+
+</P><P>
+We need to set the muxes.
+
+</P><P>
+We need to generate the three ALU cntl lines: 1-bit Bnegate and 2-bit OP
+</P><PRE>    And     0 00
+    Or      0 01
+    Add     0 10
+    Sub     1 10
+    Set-LT  1 11
+</PRE>
+
+<STRONG>Homework:</STRONG>
+What happens if we use 1 00?  if we use 1 01?
+Ignore the funny business in the HOB.
+The funny business ``ruins'' these ops.
+
+<P>
+What information can we use to decide on the muxes and alu cntl lines?
+
+</P><P>
+The instruction!
+</P><UL>
+<LI>
+    Opcode field (6 bits)
+</LI><LI>
+    For R-type the funct field (6 bits)
+</LI></UL>
+
+<P>
+So no problem, just do a truth table.
+</P><UL>
+<LI>
+    12 inputs, 3 outputs
+</LI><LI>
+    4096 rows, 15 columns, &gt; 60K entries
+</LI><LI>
+    HELP!
+</LI></UL>
+
+<P>
+We will let the main control (to be done later) ``summarize''
+the opcode for us.  It will generate a 2-bit field ALUop
+
+</P><PRE>    ALUop   Action needed by ALU
+
+    00      Addition (for load and store)
+    01      Subtraction (for beq)
+    10      Determined by funct field (R-type instruction)
+    11      Not used
+</PRE>
+
+<P>
+How many entries do we have now in the truth table
+</P><UL>
+<LI>
+    Instead of a 6-bit opcode we have a 2-bit summary.
+</LI><LI>
+    We still have a 6-bit function (funct) field
+</LI><LI>
+	So now we have 8 inputs (2+6) and 3 outputs
+</LI><LI>
+    256 rows, 11 columns; ~2800 entries
+</LI><LI>
+	Certainly easy for automation ... but we will be clever
+</LI><LI>
+    We only have 8 MIPS instructions that use the ALU (fig 5.15).               
+
+<P>
+<TABLE border="1">
+<TBODY><TR>
+    <TH>opcode</TH>
+    <TH>ALUop</TH>
+    <TH>operation</TH>
+    <TH>funct field</TH>
+    <TH>ALU action</TH>
+    <TH>ALU cntl</TH>
+</TR>
+<TR>
+    <TD>LW</TD>
+    <TD>00</TD>
+    <TD>load word</TD>
+    <TD>xxxxxx</TD>
+    <TD>add</TD>
+    <TD>010</TD>    
+</TR>
+<TR>
+    <TD>SW</TD>
+    <TD>00</TD>
+    <TD>store word</TD>
+    <TD>xxxxxx</TD>
+    <TD>add</TD>
+    <TD>010</TD>
+</TR>
+<TR>
+    <TD>BEQ</TD>
+    <TD>01</TD>
+    <TD>branch equal</TD>
+    <TD>xxxxxx</TD>
+    <TD>subtract</TD>
+    <TD>110</TD>
+</TR>
+<TR>
+    <TD>R-type</TD>
+    <TD>10</TD>
+    <TD>add</TD>
+    <TD>100000</TD>
+    <TD>add</TD>
+    <TD>010</TD>
+</TR>    
+<TR>
+    <TD>R-type</TD>
+    <TD>10</TD>
+    <TD>subtract</TD>
+    <TD>100010</TD>
+    <TD>subtract</TD>
+    <TD>110</TD>
+</TR>    
+<TR>
+    <TD>R-type</TD>
+    <TD>10</TD>
+    <TD>AND</TD>
+    <TD>100100</TD>
+    <TD>and</TD>
+    <TD>000</TD>
+</TR>    
+<TR>
+    <TD>R-type</TD>
+    <TD>10</TD>
+    <TD>OR</TD>
+    <TD>100101</TD>
+    <TD>or</TD>
+    <TD>001</TD>
+</TR>
+<TR>
+    <TD>R-type</TD>
+    <TD>10</TD>
+    <TD>SLT</TD>
+    <TD>101010</TD>
+    <TD>set on less than</TD>
+    <TD>111</TD>
+</TR>
+</TBODY></TABLE>
+
+</P><P>
+</P></LI><LI>
+    The first two rows are the same
+</LI><LI>
+    When funct is used its two HOBs are 10 so are don't care
+</LI><LI>
+    ALUop=11 impossible ==&gt; 01 = X1   and    10 = 1X
+</LI><LI>
+    So we get
+</LI></UL>
+
+    <PRE>    ALUop | Funct        ||  Bnegate:OP
+    1 0   | 5 4 3 2 1 0  ||  B OP
+    ------+--------------++------------
+    0 0   | x x x x x x  ||  0 10
+    x 1   | x x x x x x  ||  1 10
+    1 x   | x x 0 0 0 0  ||  0 10
+    1 x   | x x 0 0 1 0  ||  1 10
+    1 x   | x x 0 1 0 0  ||  0 00
+    1 x   | x x 0 1 0 1  ||  0 01
+    1 x   | x x 1 0 1 0  ||  1 11
+    </PRE>
+
+<UL>
+<LI>How would we implement this?
+</LI><LI>A circuit for each of the three output bits.
+</LI><LI>Must decide when each output bit is 1.
+</LI><LI>We do this one output bit at a time.<BR><BR>
+
+    <OL>
+    <LI>When is Bnegate (called Op2 in book) asserted?<BR>
+    
+        <UL>
+        <LI>Those rows where its bit is 1, rows 2, 4, and 7.
+        
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        x 1   | x x x x x x
+        1 x   | x x 0 0 1 0
+        1 x   | x x 1 0 1 0
+        </PRE>
+
+        </LI><LI>Notice that, in the 5 rows with ALUop=1x, F1=1 is enough
+        to distinugish the two rows where Bnegate is asserted.
+        </LI><LI>This gives
+
+        <PRE>        ALUop | Funct       
+        1 0   | 5 4 3 2 1 0 
+        ------+-------------
+        x 1   | x x x x x x 
+        1 x   | x x x x 1 x 
+        </PRE>
+
+        </LI><LI>Hence Bnegate is ALUOp0 + (ALUOp1 F1)
+        </LI></UL>
+
+    <BR></LI><LI>When is OP1 asserted?
+        <UL>
+        <LI>Again we begin with the rows where its bit is one
+
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        0 0   | x x x x x x
+        x 1   | x x x x x x
+        1 x   | x x 0 0 0 0
+        1 x   | x x 0 0 1 0
+        1 x   | x x 1 0 1 0
+        </PRE>
+
+        </LI><LI>Again inspection of the 5 ALUOp rows finds one F bit that
+        distinguishes when OP1 is asserted, namely F2=0
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        0 0   | x x x x x x
+        x 1   | x x x x x x
+        1 x   | x x x 0 x x
+        </PRE>
+
+        
+        </LI><LI>Since x 1 in the second row is really 0 1, rows 1 and 2
+        can be combined to give
+
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        0 x   | x x x x x x
+        1 x   | x x x 0 x x
+        </PRE>
+
+        </LI><LI>Now we can use the first row to enlarge the scope of the
+        last row
+
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        0 x   | x x x x x x
+        x x   | x x x 0 x x
+        </PRE>
+
+        </LI><LI>So OP1 = NOT ALUOp0 + NOT F2
+        </LI></UL><BR>
+
+    </LI><LI>When is OP0 asserted?
+
+        <UL>
+        <LI>Start with the rows where its bit is set.
+
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        1 x   | x x 0 1 0 1
+        1 x   | x x 1 0 1 0
+        </PRE>
+
+        </LI><LI>But looking at all the rows ALUOp is 1 x we see that these
+        two are characterized by simply two Function bits
+
+        <PRE>        ALUop | Funct      
+        1 0   | 5 4 3 2 1 0
+        ------+------------
+        1 x   | x x x x x 1
+        1 x   | x x 1 x x x
+        </PRE>
+
+        </LI><LI>So OP0 is ALUop1 F0 + ALUop1 F3 
+        </LI></UL>
+
+    </LI></OL>
+</LI></UL>
+
+<P>
+The circuit is then easy.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/aluop-control.png">
+
+</P><HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #18
+========</BIG></STRONG></DIV><HR>
+
+<STRONG><BIG>I cleaned up the discussion about OP[2-0] from the end of
+last time</BIG></STRONG>
+
+<P>
+Now we need the main control
+</P><UL>
+<LI>
+    setting the four muxes
+</LI><LI>
+    Writing the registers
+</LI><LI>
+    Writing the memory
+</LI><LI>
+    Reading the memory ??? (for technical reasons)
+</LI><LI>
+    Calculating ALUop
+</LI></UL>
+
+<P>
+So 9 bits
+
+</P><P>
+The following figure shows where these occur.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath+control-small.png">
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/datapath+control.png">
+
+</P><P>
+They all are determined by the opcode
+
+</P><P>
+The MIPS instruction set is fairly regular.  Most fields we need
+are always in the same place in the instruction.
+</P><UL>
+<LI>
+    Opcode (called Op[5-0]) always in 31-26
+</LI><LI>
+    Regs to be read always 25-21 and 20-16 (R-type, beq, store)
+</LI><LI>
+    Base reg for effective address always 25-21 (load store)
+</LI><LI>
+    Offset always 15-0
+</LI><LI>
+    Oops: Reg to be written EITHER 20-16 (load) OR 15-11 (R-type) MUX!!
+</LI></UL>
+
+<P>
+<TABLE border="1">
+<TBODY><TR>
+    <TD>MemRead:</TD>
+    <TD>Memory delivers the value stored at the specified addr</TD>
+</TR><TR>
+    <TD>MemWrite:</TD>
+    <TD>Memory stores the specified value at the specified addr</TD>
+</TR><TR>
+    <TD>ALUSrc:</TD>
+    <TD>Second ALU operand comes from (reg-file / sign-ext-immediate)</TD>
+</TR><TR>
+    <TD>RegDst:</TD>
+    <TD>Number of reg to write comes from the (rt / rd) field</TD>
+</TR><TR>
+    <TD>RegWrite:</TD>
+    <TD>Reg-file stores the specified value in the specified register</TD>
+</TR><TR>
+    <TD>PCSrc:</TD>
+    <TD>New PC is Old PC+4 / Branch target</TD>
+</TR><TR>
+    <TD>MemtoReg:</TD>
+    <TD>Value written in reg-file comes from (alu / mem)</TD>
+</TR></TBODY></TABLE>
+
+</P><P>
+We have seen the wiring before (and given a hardcopy handout)
+
+</P><P>
+We are interested in four opcodes
+</P><UL>
+<LI>
+    R-type
+</LI><LI>
+    load
+</LI><LI>
+    store
+</LI><LI>
+    BEQ
+</LI></UL>
+
+<P>
+Do a stage play
+</P><UL>
+<LI>Need ``volunteers''
+    <OL>
+    <LI>One for each of 4 muxes
+    </LI><LI>One for PC reg
+    </LI><LI>One for the register file
+    </LI><LI>One for the instruction memory
+    </LI><LI>One for the data memory
+    </LI></OL>
+</LI><LI>I will play the control
+</LI><LI>Let the PC initially be zero
+</LI><LI>Let each register initially contain its number (e.g. R2=2)
+</LI><LI>Let each data memory word initially contain 100 times its address
+</LI><LI>Let the instruction memory contain (starting at zero)
+<PRE>add r9,r5,r1 r9=r5+r1   0   5   1   9   0  32
+sub r9,r9,r6            0   9   6   9   0  34
+beq r9,r0,-8            4   9   0   &lt;  -2   &gt;
+slt r1,r9,r0            0   9   0   1   0  42
+lw  r1,102(r2)         35   2   1   &lt;  100  &gt;
+sw  r9,102(r2) 
+</PRE>
+</LI><LI>Go!
+</LI></UL>
+
+<P>
+The following figures illustrate the play.
+
+</P><P>We start with R-type instructions
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-1-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-2-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-3-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-4-small.png">
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-1.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-2.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-3.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-R-4.png">
+
+</P><P>Next we show lw
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-1-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-2-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-3-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-4-small.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-5-small.png">
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-1.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-2.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-3.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-4.png">
+</P><P><IMG src="./Class Notes for Computer Architecture_files/execute-lw-5.png">
+
+
+</P><P>
+The following truth table shows the settings for the control lines for
+each opcode.  This is drawn differently since the labels of what
+should be the columns are long (e.g. RegWrite) and it is easier to
+have long labels for rows.
+</P><P>
+<TABLE border="1">
+<TBODY><TR>
+    <TH>Signal</TH><TH>R-type</TH><TH>lw</TH><TH>sw</TH><TH>beq</TH>
+</TR><TR>
+    <TD>Op5</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD>
+</TR><TR>
+    <TD>Op4</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD>
+</TR><TR>
+    <TD>Op3</TD><TD>0</TD><TD>0</TD><TD>1</TD><TD>0</TD>
+</TR><TR>
+    <TD>Op2</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>1</TD>
+</TR><TR>
+    <TD>Op1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD>
+</TR><TR>
+    <TD>Op0</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD>
+</TR><TR>
+</TR><TR>
+</TR><TR>
+</TR><TR>
+</TR><TR>
+</TR><TR>
+    <TD>RegDst</TD><TD>1</TD><TD>0</TD><TD>X</TD><TD>X</TD>
+</TR><TR>
+    <TD>ALUSrc</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD>
+</TR><TR>
+    <TD>MemtoReg</TD><TD>0</TD><TD>1</TD><TD>X</TD><TD>X</TD>
+</TR><TR>
+    <TD>RegWrite</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD>
+</TR><TR>
+    <TD>MemRead</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>0</TD>
+</TR><TR>
+    <TD>MemWrite</TD><TD>0</TD><TD>0</TD><TD>1</TD><TD>0</TD>
+</TR><TR>
+    <TD>Branch</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>1</TD>
+</TR><TR>
+    <TD>ALUOp1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>0</TD>
+</TR><TR>
+    <TD>ALUOp</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>1</TD>
+</TR></TBODY></TABLE>
+
+</P><P>
+Now it is straightforward but tedious to get the logic equations
+
+</P><P>
+When drawn in pla style the circuit is
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/control.png"> 
+
+</P><P><STRONG>Homework:</STRONG>
+5.5 and 5.11 control, 5.1, 5.2, 5.10 (just the single-cycle datapath) 5.11
+
+</P><H3>Implementing a J-type instruction, unconditional jump</H3>
+
+<PRE>    opcode  addr
+    31-26   25-0
+</PRE>
+
+Addr is word address; bottom 2 bits of PC are always 0
+
+<P>
+Top 4 bits of PC stay as they were (AFTER incr by 4)
+
+</P><P>
+Easy to add.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/including-jump-small.png">
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/including-jump.png">
+
+</P><P>Smells like a good final exam type question.
+
+</P><H3>What's Wrong</H3>
+
+<P>
+Some instructions are likely slower than others and we must set the
+clock cycle time long enough for the slowest.  The disparity between
+the cycle times needed for different instructions is quite significant
+when one considers implementing more difficult instructions, like
+divide and floating point ops.
+
+</P><P>
+Possible solutions
+</P><UL>
+<LI>
+    Variable length cycle
+</LI><LI>
+    Asynchronous logic
+    <UL>
+    <LI>
+        ``Self-timed'' logic
+    </LI><LI>
+        No clock.  Instead each signal (or group of signals) is
+        coupled with another signal that changes only when the first
+        signal (or group) is stable.
+    </LI><LI>
+        Hard to debug
+    </LI></UL>
+</LI><LI>
+    Multicycle instructions
+    <UL>
+    <LI>
+        More complicated instructions have more cycles
+    </LI><LI>
+        Since only one instruction being done at a time, can reuse a
+        single ALU and other resourses during different cycles
+    </LI><LI>
+        It is in the book right at this point but we are not covering it.
+    </LI></UL>
+</LI></UL>
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #19
+========</BIG></STRONG></DIV><HR> 
+
+<P>
+Even Faster
+</P><UL>
+<LI>
+Pipeline the cycles
+    <UL>
+    <LI>
+    Since at one time we will have several instructions active, each
+    at a different cycle, the resourses can't be reused (e.g., more
+    than one instruction might need to do a register read/write at one
+    time)
+    </LI><LI>
+    Pipelining is more complicated than the single cycle
+    implementation we did.
+    </LI><LI>
+    This was the basic RISC technology on the 1980s
+    </LI><LI>
+    It is covered in chapter 6.
+    </LI></UL>
+</LI><LI>
+Multiple datapaths (superscalar)
+    <UL>
+    <LI>
+    Issue several instructions each cycle and the <EM>hardware</EM>
+    figures out dependencies and only executes instructions when the
+    dependencies are satisfied.
+    </LI><LI>
+    Much more logic required, but conceptually not too difficult
+    providing the system executes instructions <EM>in order</EM>
+    </LI><LI>
+    Pretty hairy if <EM>out of order</EM> (OOO) exectuion is
+    permitted.
+    </LI><LI>
+    Current high end processors
+    </LI></UL>
+</LI><LI>
+VLIW (Very Long Instruction Word)
+    <UL>
+    <LI>
+    User (i.e., the compiler) packs several instructions into one
+    ``superinstruction'' called a very long instruction.
+    </LI><LI>
+    User guarentees that there are no dependencies within a
+    superinstruction.
+    </LI><LI>
+    Hardware still needs multiple datapaths (indeed the datapaths are
+    not so different as superscalar.
+    </LI><LI>
+    Was proposed and tried in 80s, but was dominated by superscalar.
+    </LI><LI>
+    A comeback (?) with Intel's EPIC (Explicitly Parallel Instruction
+    Computer ?).
+        <UL>
+        <LI>
+        Called IA-64 (Intel Architecture 64-bits); the first
+        implementation was called Merced and now has a funny name
+        (Itanium?).  It should be available next year
+        </LI><LI>
+        It has other features as well (e.g. predication).
+        </LI><LI>
+        The x86, Pentium, etc are called IA-32.
+        </LI></UL>
+    </LI></UL>
+</LI></UL>
+
+
+<H1>Chapter 2 Performance analysis</H1>
+
+<P>
+<STRONG>Homework:</STRONG>
+Read Chapter 2
+
+
+</P><P><STRONG>Throughput</STRONG> measures the number of jobs per day
+that can be accomplished.  <STRONG>Response time</STRONG> measures how
+long an individual job takes.
+
+</P><UL>
+<LI>So a faster machine improves both (increasing throughput and
+decreasing response time).
+</LI><LI>Normally anything that improves response time improves throughput.
+</LI><LI>
+    Adding a processor likely to increase throughput more than
+    it decreases response time.
+</LI><LI>
+    We will mostly be concerned with response time
+</LI></UL>
+
+<P>
+Performance = 1 / Execution time
+
+</P><P>
+So machine X is n times faster than Y means that
+</P><UL>
+<LI>
+    Performance-X  =  n * Performance-Y
+</LI><LI>
+    Execution-time-X = (1/n) * Execution-time-Y
+</LI></UL>
+
+<P>
+How should we measure execution-time?
+</P><UL>
+<LI>
+    CPU time
+    <UL>
+    <LI>
+        Includes time waiting for memory
+    </LI><LI>
+        Does not include time waiting for I/O
+        as this process is not not running
+    </LI></UL>
+</LI><LI>
+    Elapsed time on empty system
+</LI><LI>
+    Elapsed time on ``normally loaded'' system
+</LI><LI>
+    Elapsed time on ``heavily loaded'' system
+</LI></UL>
+
+<P>
+We mostly use CPU time, but this does <EM>not</EM> mean the other
+metrics are worse.
+
+</P><P>Cycle time vs. Clock rate
+
+</P><UL>
+<LI>Recall that the cycle time is the length of a cycle.  
+</LI><LI>It is a unit of <EM>time</EM>.
+</LI><LI>For modern computers it is expressed in <EM>nanoseconds</EM>,
+abbreviated ns.
+</LI><LI>One nano-second is one billionth of a second = 10^(-9) seconds.
+</LI><LI>The clock rate tells how many cycles fit into a given time unit
+(normally in one second).
+</LI><LI>So the natural unit is <EM>cycles per second</EM>.  This was
+abbreviated CPS.
+</LI><LI>However, the world has changed and the new name (for the same
+thing) is <EM>Hertz</EM>, abbreviated Hz.  One Hertz is one cycle per second.
+</LI><LI>For modern computers the rate is expressed in <EM>megahertz</EM>,
+abbreviated MHz.
+</LI><LI>One megahertz is one million hertz = 10^6 hertz.
+</LI><LI>What is the cycle time for a 333MHz computer?
+    <UL>
+    <LI>333 million cycles = 1 second
+    </LI><LI>3.33*10^8 cycles = 1 second
+    </LI><LI>1 cycle = 1/(3.33*10^8) seconds = 10/3.33 * 10^(-9) seconds ~= 3ns
+    </LI><LI>Electricity travels about 1 foot in 1ns
+    </LI></UL>
+</LI></UL>
+
+<P>So the execution time for a given job on a given computer is
+</P><PRE>(CPU) execution time = (#CPU clock cycles required) * (cycle time)
+                     = (#CPU clock cycles required) / (Clock rate)
+</PRE>
+
+<P>
+So a machine with a 10ns cycle time runs at a rate of<BR>
+1 cycle per 10 ns =   100,000,000 cycles per second = 100 MHz
+
+</P><P>
+The number of CPU clock cycles required equals the number of
+instructions executed times the number of cycles in each
+instruction.
+</P><UL>
+<LI>In our single cycle implementation, the number of cycles required
+is just the number of instructions executed.
+</LI><LI>If every instruction took 5 cycles, the number of cycles required
+would be five times the number of instructions executed.
+</LI></UL>
+
+<P>But systems are more complicated than that!
+</P><UL>
+<LI>Some instructions take more cycles than others.
+</LI><LI>With pipelining, several instructions are in progress at different
+stages of their execution.
+</LI><LI>With super scalar (or VLIW) many instructions are issued at once
+and many can be at the same stage of execution.
+</LI><LI>Since modern superscalars (and VLIWs) are also pipelined we have
+many many instructions in execution at once
+</LI></UL>
+
+<P>
+Through a great many measurement, one calculates for a given machine
+the <EM>average</EM> CPI (cycles per instruction).
+
+</P><P>
+#instructions for a given program depends on the instruction set.  For
+example we saw in chapter 3 that 1 vax instruction is often
+accomplishes more than 1 MIPS instruction.
+
+</P><P>
+Complicated instructions take longer; either more cycles or longer cycle
+time
+
+</P><P>
+Older machines with complicated instructions (e.g. VAX in 80s) had CPI&gt;&gt;1
+
+</P><P>
+With pipelining can have many cycles for each instruction but still
+have CPI nearly 1.
+
+</P><P>
+Modern superscalar machines have CPI &lt; 1
+</P><UL>
+<LI>
+    They issue many instructions each cycle
+</LI><LI>
+    They are pipelined so the instructions don't finish for several cycles
+</LI><LI>
+    If have 4-issue and all instructions 5 pipeline stages, there are
+    up to  20=5*4 instructions in progress (often called in flight) at
+    one time. 
+</LI></UL>
+
+<P>
+Putting this together, we see that
+</P><PRE>   Time (in seconds) =  #Instructions * CPI * Cycle_time (in seconds)
+   Time (in ns) =  #Instructions * CPI * Cycle_time (in ns)
+</PRE>
+
+<P>
+<STRONG>Homework:</STRONG>
+Carefully go through and understand the example on page 59
+
+</P><P>
+<STRONG>Homework:</STRONG>
+2.1-2.5 2.7-2.10
+
+</P><P>
+<STRONG>Homework:</STRONG>
+Make sure you can easily do all the problems with a rating of
+[5] and can do all with a rating of [10]
+
+</P><P>
+What about MIPS?
+</P><UL>
+<LI>
+    Millions of Instructions Per Second
+</LI><LI>
+    <EM>Not</EM> the same as the MIPS computer (but <EM>not</EM> a
+    coincidence).
+</LI><LI>For a given machine language program, the seconds required is<BR>
+the number of instructions executed / MIPS<BR>
+<STRONG>BUT</STRONG>
+    <OL>
+    <LI>The same program in C might need different number of instructions
+        on different computers (e.g. one VAX instruction might take 2
+        instructions on a power-PC)
+    </LI><LI>
+        Different programs generate different MIPS ratings on same
+        arch.
+            <UL>
+            <LI>Some programs execute more long instructions
+            than do other programs.
+            </LI><LI>Some programs have more cache misses and hence cause
+            more waiting for memory.
+            </LI><LI>Some programs inhibit full pipelining
+            (e.g. mispredicted branches)
+            </LI><LI>Some programs inhibit full superscalar behavior (data
+            dependencies) 
+            </LI></UL>
+    </LI><LI>
+        One can oftern raise the MIPS rating by adding NOPs despite
+        increasing exec time
+    </LI></OL>
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+Carefully go through and understand the example on pages 61-3
+
+</P><P>
+Why not use MFLOPS
+</P><UL>
+<LI>
+    Millions of FLoating point Operations Per Second
+</LI><LI>
+    Similiar problems to MIPS (not quite as bad since can't add no-ops)
+</LI></UL>
+
+<P>
+Benchmarks
+</P><UL>
+<LI>
+    This is better, but still has difficulties
+</LI><LI>
+    Hard to find benchmarks that represent <EM>your future</EM> usage.
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+Carefully go through and understand 2.7 ``fallacies and pitfalls''
+
+</P><HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #20
+========</BIG></STRONG></DIV><HR>
+
+
+<H1>Chapter 7 Memory</H1>
+
+<STRONG>Homework:</STRONG>
+Read Chapter 7
+
+<P>
+Ideal memory is
+</P><UL>
+<LI>
+    Fast
+</LI><LI>
+    Big (in capacity; not physical size)
+</LI><LI>
+    Cheap
+</LI><LI>
+    Imposible
+</LI></UL>
+
+<P>
+We observe empirically
+</P><UL>
+<LI>
+    <EM>Temporal Locality</EM>: The word referenced now is likely to be
+    referenced again soon.  Hence it is wise to keep the currently
+    accessed word handy for a while.
+</LI><LI>
+    <EM>Spacial Locality</EM>: Words near the currently referenced
+    word are likely to be referenced soon.  Hence it is wise to
+    prefetch words near the currently referenced word and keep them
+    handy for a while.
+</LI></UL>
+
+<P>
+So use a memory <EM>hierarchy</EM>
+</P><OL>
+<LI>
+    Registers
+</LI><LI>
+    Cache  (really L1 L2 maybe L3)
+</LI><LI>
+    Memory
+</LI><LI>
+    Disk
+</LI><LI>
+    Archive
+</LI></OL>
+
+<P>
+There is a gap between each pair of adjacent levels.
+We study the cache &lt;---&gt; memory gap
+</P><UL>
+<LI>
+    In modern systems there are many levels of caches.
+</LI><LI>
+    Similar considerations apply to the other gaps (e.g.,
+    memory&lt;---&gt;disk, where virtual memory techniques are applied)
+</LI><LI>
+    But terminology is often different, e.g. cache line vs page.
+</LI><LI>
+   In fall 97 my OS class was studying ``the same thing'' at this
+   exact point (memory management).  Not true this year since the OS
+   text changed and memory management is earlier.
+</LI></UL>
+
+<P>A <STRONG>cache</STRONG> is a small fast memory between the
+processor and the main memory.  It contains a subset of the contents
+of the main memory.
+
+</P><P>
+A Cache is organized in units of <STRONG>blocks</STRONG>.  Common
+block sizes are 16, 32, and 64 bytes.
+</P><UL>
+<LI>
+    We also view memory as organized in blocks as well.  If the block
+    size is 16, then bytes 0-15 of memory are in block 0, bytes 16-31
+    are in block 1, etc.
+</LI><LI>
+    Transfers from memory to cache and back are one block.
+</LI><LI>
+    Big blocks make good use of spacial locality
+</LI><LI>
+    (OS think of pages and page frames)
+</LI></UL>
+
+<P>
+A <STRONG>hit</STRONG> occurs when a memory reference is found in
+the upper level of memory hierarchy.
+</P><UL>
+<LI>
+    We will be interested in cache hits (OS in page hits), when the
+    reference is found in the cache (OS: when found in main memory)
+</LI><LI>
+    A <STRONG>miss</STRONG> is a non-hit.
+</LI><LI>
+    <STRONG>The hit rate</STRONG> is the fraction of memory references
+    that are hits.
+</LI><LI>
+    <STRONG>The miss rate</STRONG> is 1 - hit rate, which is the
+    fraction of references that are misses.
+</LI><LI>
+    <STRONG>The hit time</STRONG> is the time required for a hit.
+</LI><LI>
+    <STRONG>The miss time</STRONG> is the time required for a miss.
+</LI><LI>
+    <STRONG>The miss penalty</STRONG> is Miss time - Hit time.
+</LI></UL>
+
+<P>
+We start with a very simple cache organization.
+</P><UL>
+<LI>
+    Assume all referencess are for one word (not too bad).
+</LI><LI>
+    Assume cache blocks are one word.
+    <UL>
+    <LI>
+        This does not take advantage of spacial locality so is not
+        done in real machines.
+    </LI><LI>
+        We will drop this assumption soon.
+    </LI></UL>
+</LI><LI>
+    Assume each memory block can only go in one specific cache block
+    <UL>
+    <LI>
+        Called <STRONG>Direct Mapped</STRONG>.
+    </LI><LI>
+        The location of the memory block in the cache (i.e. the block
+        number in the cache) is the memory block number modulo the
+        number of blocks in the cache.
+    </LI><LI>
+        For example, if the cache contains 100 blocks, then memory
+        block 34452 is stored in cache block 52.
+    </LI><LI>
+        In real systems the number of blocks in the cache is a power
+        of 2 so taking modulo is just extracting low order bits.
+    </LI></UL>
+</LI><LI>
+    Example: if the cache has 16 blocks, the location of a block in
+    the cache is the low order 4 bits of block number.
+</LI><LI>A pictorial example for a cache with only 4 blocks and a memory
+    with only 16 blocks.
+
+    <P><IMG src="./Class Notes for Computer Architecture_files/cache-addressing.png">
+
+    </P><P><IMG src="./Class Notes for Computer Architecture_files/cache-addressing-reduced.png">
+</P></LI><LI>
+    How can we tell if a memory block is in the cache?
+    <UL>
+    <LI>
+        We know where it will be <EM>if</EM> it is there at all
+        (memory block number mod number of blocks in the cache).
+    </LI><LI>But many memory blocks are assigned to that same cache block.
+    </LI><LI>
+        So we need the ``rest'' of the address (i.e., the part lost
+        when we reduced the block number modulo the size of the cache)
+        to see if the block in the cache is the memory block of
+        interest,
+    </LI><LI>
+        Store the rest of the address, called the <EM>tag.</EM>
+    </LI><LI>
+        Also store a <EM>valid</EM> bit per cache block  so that we
+        can tell if there is a memory block stored in this cache
+        block.<BR>
+        For example when the system is powered on, all the cache
+        blocks are invalid.
+    </LI></UL>
+</LI></UL>
+
+<P>Example on pp. 547-8.
+</P><UL>
+<LI>Tiny 8 word direct mapped cache with block size one word and all
+references are for a word.
+</LI><LI>In the table to follow all the addresses are word addresses.  For
+example the reference to 3 means the reference to word 3 (which
+includes bytes 12, 13, 14, and 15).
+</LI><LI>If reference experience a miss and the cache block is valid, the
+current reference is discarded (in this example only) and the new
+reference takes its place.
+</LI><LI>Do this example on the board showing the address store in the
+cache at all times
+</LI></UL>
+
+<TABLE border="1">
+<TBODY><TR><TH>Address(10)</TH><TH>Address(2)</TH><TH>hit/miss</TH><TH>block#</TH></TR>
+<TR><TD>22</TD><TD>10110</TD><TD>miss</TD><TD>110</TD></TR>
+<TR><TD>26</TD><TD>11010</TD><TD>miss</TD><TD>010</TD></TR>
+<TR><TD>22</TD><TD>10110</TD><TD>hit</TD><TD>110</TD></TR>
+<TR><TD>26</TD><TD>11010</TD><TD>hit</TD><TD>010</TD></TR>
+<TR><TD>16</TD><TD>10000</TD><TD>mis</TD><TD>000</TD></TR>
+<TR><TD>3</TD><TD>00011</TD><TD>miss</TD><TD>011</TD></TR>
+<TR><TD>16</TD><TD>10000</TD><TD>hit</TD><TD>000</TD></TR>
+<TR><TD>18</TD><TD>10010</TD><TD>miss</TD><TD>010</TD></TR>
+</TBODY></TABLE>
+
+<P>The basic circuitry for this simple cache to determine hit or miss
+and to return the data is quite easy.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/cache-simple.png">
+
+</P><P>Calculate on the board the total number of bits in this cache.
+
+</P><P>
+<STRONG>Homework:</STRONG>
+7.1 7.2 7.3
+
+
+</P><P>Processing a read for this simple cache
+</P><UL>
+<LI>
+    Hit is trivial (return the data found).
+</LI><LI>
+    Miss: Evict and replace
+    <UL>
+    <LI>Why?  I.e., why keep new data instead of old?<BR>
+        Ans:  Temporal Locality
+    </LI><LI>This is called <STRONG>write-allocate</STRONG>.
+    </LI><LI>The alternative is called <STRONG>write-no-allocate</STRONG>.
+    </LI></UL>
+</LI></UL>
+
+<P>Skip section ``handling cache misses'' as it discusses the
+multicycle and pipelined implementations of chapter 6, which we
+skipped.
+
+</P><P>For our single cycle processor implementation we just need to note
+a few points
+</P><UL>
+<LI>The instruction and data memory are replaced with caches.
+</LI><LI>On cache misses one needs to fetch or store the desired
+data or instruction in central memory.
+</LI><LI>This is very slow and hence our cycle time must be very
+long.
+</LI><LI>Yet another reason why the single cycle implementation is
+not used in practice.
+</LI></UL>
+
+Processing a write for this simple cache
+<UL>
+<LI>
+    Hit:  <STRONG>Write through</STRONG> vs <STRONG>write back</STRONG>.
+    <UL>
+    <LI>
+        Write through writes the data to memory as well as to the cache.
+    </LI><LI>
+        <STRONG>Write back</STRONG>: Don't write to memory now, do it
+        later when this cache block is evicted.
+    </LI></UL>
+</LI><LI>
+    Miss: write-allocate vs write-no-allocate
+</LI><LI>
+    The simplist is write-through, write-allocate 
+    <UL>
+    <LI>
+        Still assuming blksize=refsize = 1 word and direct mapped
+    </LI><LI>
+        <A name="3100-write-action"></A>
+        For any write (Hit or miss) do the following:
+        <OL>
+        <LI>
+            Index the cache using the correct LOBs (i.e., not the very
+            lowest order bits as these give the byte offset.
+        </LI><LI>
+            Write the data and the tag
+            <UL>
+            <LI>For a hit, we are overwriting the tag with itself.
+            </LI><LI>For a miss, we are performing a write allocate and
+            since the cache is write-throught we can simply overwrite
+            the current entry
+            </LI></UL>                
+        </LI><LI>
+            Set Valid to true
+        </LI><LI>
+            Send request to main memory
+        </LI></OL>
+    </LI><LI>
+        Poor performance
+        <UL>
+        <LI>
+            GCC benchmark has 11% of operations stores
+        </LI><LI>
+            If we assume an infinite speed memory, CPI is 1.2
+            for some reasonable estimate of instruction speeds
+        </LI><LI>
+            Assume a 10 cycle store penalty (reasonable) since we have
+            to write main memory (recall we are using a write-through
+            cache).
+        </LI><LI>
+            CPI becomes 1.2 + 10 * 11% = 2.5, which is
+            <STRONG>half speed</STRONG>.
+        </LI></UL>
+    </LI></UL>
+</LI></UL>
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #21
+========</BIG></STRONG></DIV><HR> 
+
+<P><STRONG>Homework:</STRONG> 7.2 7.3 (should have been give above
+with 7.1. I changed the notes so this is fix for ``next time'')
+
+</P><H4>Improvement:  Use a write buffer</H4>
+
+<UL>
+<LI>Hold a few (four is common) writes at the processor while they are
+    being processed at memory.
+</LI><LI>As soon as the word is written into the write buffer, the
+    instruction is considered complete and the next instruction can
+    begin.
+</LI><LI>Hence the write penalty is eliminated as long as the word can be
+    written into the write buffer.
+</LI><LI>Must stall (i.e., incur a write penalty) if the write buffer is
+    full.  This occurs if a bunch of writes occur in a short period.
+</LI><LI>If the rate of writes is greater than the rate at which memory can
+    handle writes, you must stall eventually.  The purpose of a
+    write-buffer (indeed of buffers in general) is to handle short bursts.
+</LI><LI>The Decstation 3100 had a 4-word write buffer.
+</LI></UL>
+
+<H4>Unified vs split I and D (instruction and data)</H4>
+
+<UL>
+<LI>Given a fixed total size of caches, is it better to have two
+caches, one for instructions and one for data; or is it better to have
+a single ``unified'' cache?
+</LI><LI>
+    Unified is better because better ``load balancing''.  If the
+    current program needs more data references than instruction
+    references, the cache will accomodate.  Similarly if more
+    instruction references are needed.
+</LI><LI>
+    Split is better because it can do two references at once (one
+    instruction reference and one data reference).
+</LI><LI>The winner is ...<BR>
+split I and D.
+</LI><LI>But unified has the better (i.e. higher) hit ratio.
+</LI><LI>So hit ratio is <EM>not</EM> the ultimate measure of good cache
+    performance.
+</LI></UL>
+
+<H4>Improvement:  Blocksize &gt; Wordsize</H4>
+
+<UL>
+<LI>
+    The current setup does not take any advantage of spacial
+    locality.  The idea of larger blocksizes is to bring in words near
+    the referenced word since, by spacial locality, they are likely to
+    be referenced in the near future.
+</LI><LI>
+    The figure below shows a direct mapped cache with 4-word blocks.
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/cache-bigblock.png">
+
+</P><UL>
+<LI>
+    What addresses in memory are in the block and where in the cache
+    do they go?
+    <UL>
+    <LI>The <STRONG>memory</STRONG> block number =<BR>
+    the word address / number of words per block = <BR>
+    the byte address / number of bytes per block
+    </LI><LI>The <STRONG>cache</STRONG> block number =<BR>
+    the memory block number modulo the number of blocks in the cache
+    </LI><LI>The block offset = <BR>
+    the word address modulo the number of words per block
+    </LI><LI>The tag =  <BR>
+    the word addres / the number of words in the cache =<BR>
+    the byte address / the number of bytes in the cache
+    </LI><LI>Show from the diagram how this gives the red portion for the
+    tag and the green portion for the index or cache block number.
+    </LI></UL>
+</LI><LI>Consider the cache shown in the diagram above and a reference to
+<STRONG>word</STRONG> 17001.
+    <UL>
+    <LI>17001 / 4  gives 4250 with a remainder of 1 
+    </LI><LI>So the memory block number is 4250 and the block offset is 1
+    </LI><LI>4K=4096 and 4250 / 4096 gives 0 with a remainder of 154.
+    </LI><LI>So the cache block number is 154.
+    </LI><LI>Putting this together a reference to word 17001 is a reference
+    to the first word of the cache block with index 154
+    </LI><LI>The tag is 17001 / (4K * 4) = 1
+    </LI></UL>
+</LI><LI>
+    Cachesize = Blocksize * #Entries.  For the diagram above this is 64KB.
+</LI><LI>
+    Calculate the total number of bits in this cache and in one
+    with one word blocks but still 64KB of data
+</LI><LI>
+    If the references are strictly sequential the pictured cache has 75% hits;
+    the simplier cache with one word blocks has <STRONG>no</STRONG> hits.
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+7.7 7.8 7.9
+
+</P><P>
+Why not make blocksize enormous?  Cache one huge block.
+</P><UL>
+<LI>
+    NOT all access are sequential
+</LI><LI>
+    With too few blocks misses go up again
+</LI></UL>
+
+<H4>Memory support for wider blocks</H4>
+
+<UL>
+<LI>
+    Should memory be wide?
+</LI><LI>
+    Should the bus be wide?
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/memory-width.png"></P><P>
+</P><UL>
+<LI>
+    Assume
+    <OL>
+    <LI>
+        1 clock to send the address only one address for all designs
+    </LI><LI>
+        15 clocks for each memory access (independent of width)
+    </LI><LI>
+        1 Clock/busload of data
+    </LI></OL>
+</LI><LI>
+    Narrow design (a) takes 65 clocks for a read miss since must make
+    4 memory requests (do it on the board)
+</LI><LI>
+    Wide design (b) takes 17
+</LI><LI>
+    Interleaved (c) takes 20
+</LI><LI>
+    Interleaving works great because in this case we are
+    <EM>guaranteed</EM> to have sequential accesses
+</LI><LI>
+    Imagine design between (a) and (b) with 2-word wide datapath
+
+        Takes 33 cycles and more expensive to build than (c)        
+</LI></UL>
+
+<P><STRONG>Homework:</STRONG> 7.11
+
+</P><HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #22
+========</BIG></STRONG></DIV><HR> 
+
+<P>
+Performance example to do on the board (dandy exam question).
+</P><UL>
+<LI>
+    Assume
+    <UL>
+    <LI>
+        5% I-cache miss
+    </LI><LI>
+        10% D-cache miss
+    </LI><LI>
+        1/3 of the instructions access data
+    </LI><LI>
+        CPI = 4 if miss penalty is 0 (A 0 miss penalty is not
+        realistic of course)
+    </LI></UL>
+</LI><LI>
+    What is CPI with miss penalty 12 (do it)?
+</LI><LI>
+    What is CPI if double speed cpu+cache, single speed mem
+    (24 clock miss penalty) (do it)?
+</LI><LI>
+    How much faster is the ``double speed'' machine?  It would be double
+    speed if miss penalty 0 or 0% miss rate
+</LI></UL>
+
+<P>
+<STRONG>Homework:</STRONG>
+7.15, 7.16
+
+</P><P>
+A lower base (i.e. miss-free) CPI makes stalls appear more expensive
+since waiting a fixed amount of time for the memory corresponds to
+losing more instructions if the CPI is lower.
+
+</P><P>
+Faster CPU (i.e., a faster clock) makes stalls appear more expensive
+since waiting a fixed amount of time for the memory corresponds to
+more cycles if the clock is faster (and hence more instructions since
+the base CPI is the same).
+
+</P><P>Another performance example
+</P><UL>
+<LI>Assume
+    <OL>
+    <LI>I-cache miss rate 3%
+    </LI><LI>D-cache miss rate 5%
+    </LI><LI>40% of instructions reference data
+    </LI><LI>miss penalty of 50 cycles
+    </LI><LI>Base CPI of 2
+    </LI></OL>
+</LI><LI>What is the CPI including the misses?
+</LI><LI>How much slower is the machine when misses are taken into account?
+</LI><LI>Redo the above if the I-miss penalty is reduced to 10 (D-miss
+still 50)
+</LI><LI>With I-miss penalty back to 50, what is performance if CPU (and the
+caches) are 100 times faster
+</LI></UL>
+
+<P>
+<STRONG>Remark: Larger caches have <EM>longer</EM> hit times.</STRONG>
+
+</P><H4>Improvement: Associative Caches</H4>
+
+<P>Consider the following sad story.  Jane had a cache that held 1000
+blocks and had a program that only references 4 (memory) blocks,
+namely 23, 1023, 123023, and 7023.  In fact the reference occur in
+order: 23, 1023, 123023, 7023, 23, 1023, 123023, 7023, 23, 1023,
+123023, 7023, 23, 1023, 123023, 7023, etc.  Referencing only 4 blocks
+and having room for 1000 in her cache, Jane expected an extremely high
+hit rate for her program.  In fact, the hit rate was zero.  She was so
+sad, she gave up her job as webmistriss, went to medical school, and
+is now a brain surgeon at the mayo clinic in rochester MN.
+
+</P><UL>
+<LI>
+    So far We have studied<EM> only direct mapped</EM> caches,
+    i.e. those for which the location in the cache is determined by
+    the address.  Since there is only one possible location in the
+    cache for any block, to check for a hit we compare <EM>one</EM>
+    tag with the HOBs of the addr.<BR><BR>
+</LI><LI>
+    The other extreme is <EM>fully associative</EM>.
+    <UL>
+    <LI>
+        A memory block can be placed in any cache block
+    </LI><LI>
+        Since any memory block can be in any cache block, the cache index
+        where the memory block is store tells us nothing about which
+        cache block is here.  Hence the tag must be entire address and
+        we must check all cache blocks to see if we have a hit.
+    </LI><LI>
+        The larger tag is a minor problem.
+    </LI><LI>
+        The search is a disaster.
+        <UL>
+        <LI>It could be done sequentially (one cache block at a time),
+        but this is much too slow.
+        </LI><LI>We could have a comparator with <EM>each</EM> tag and mux
+        all the blocks to select the one that matches.
+            <UL>
+            <LI>This is too big due to both the many comparators and
+            the humongous mux.
+            </LI><LI>However, it is exactly what is done when implementing
+            translation lookaside buffers (TLBs), which are used with
+            demand paging
+            </LI></UL>
+        </LI></UL>
+    </LI><LI>
+        An alternative is to have a table with one entry per
+        MEMORY block giving the cache block number.  This is too
+        big and too slow for caches but is used for virtual memory
+        (demand paging).
+    </LI></UL><BR>
+</LI><LI>
+    Most common for caches is an intermediate configuration called
+    <EM>set associative</EM> or n-way associative (e.g. 4-way
+    associative) or n-way set associative.
+    <UL>
+    <LI>n is typically 2, 4, or 8.
+    </LI><LI>If the cache has B blocks, we group them into B/n
+    <STRONG>sets</STRONG> each of size n.  Memory block number K is
+    then stored in set K mod (B/n).
+    </LI><LI>Figure 7.15 has a bug.  It indicates that the tag for memory
+    block 12 is itself 12.  The figure below corrects this
+    </LI></UL>
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/cache-set-assoc.png"></P><P>
+
+</P><UL>
+<LI>
+    The picture did 2-way set set associative.  Do on the board
+    4-way set associative.
+</LI><LI>
+    The Set# = (memory) block# mod #sets
+</LI><LI>
+    The Tag  = (memory) block#  /  #sets
+</LI><LI>
+    What is 8-way set associative in a cache with 8 blocks (i.e., the
+    cache in the picture)?
+</LI><LI>
+    What is 1-way set associative?
+</LI><LI>
+    Why is set associativity good?  For example, why is 2-way set
+    associativity better than direct mapped?
+    <UL>
+    <LI>
+        Consider referencing two modest arrays (&lt;&lt; cache size) that
+        start at location 1MB and 2MB.
+    </LI><LI>
+        Both will contend for the same cache locations in a direct
+        mapped cache but will fit together in a cache with &gt;=2 sets.
+    </LI></UL>
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #23
+========</BIG></STRONG></DIV><HR> 
+
+</LI><LI>
+    How does the cache find a memory block?
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/cache-4-way.png"></P><P>
+
+</P><UL>
+<LI>
+    Why is set associativity bad?<BR>
+    It is a little slower due to the mux and AND gate.
+</LI><LI>
+    Which block (in the set) should be replaced?
+    <UL>
+    <LI>
+        Random is sometimes used<BR>
+    </LI><LI>
+        LRU is better but not so easy to do quickly.
+        <UL>
+        <LI>
+            If the cache is 2-way set associative, each set is of size
+            two and it is easy to find the lru block quickly.
+            How?<BR>
+            For each set keep a bit indicating which block in the set
+            was just referenced and the lru block is the other one.
+        </LI><LI>
+            If the cache is 4-way set associative, each set is of size
+            4.  Consider these 4 blocks as two groups of 2.  Use the
+            trick above to find the group most recently used and pick
+            the other group.  Also use the trick within each group and
+            chose the block in the group not used last.
+        </LI><LI>
+            Sound great.  We can do lru fast.  Wrong!  The above is
+            not LRU it is just an approximation.  Show this on the board.
+        </LI></UL>
+    </LI></UL>
+</LI></UL>
+
+<H4>Tag size and division of the address bits</H4>
+
+<P>We continue to assume a byte addressed machines, but all references
+are to a 4-byte word (lw and sw).
+
+</P><P>The 2 LOBs are not used (they specify the byte within the word but
+all our references are for a complete word).  We show these two bits in
+dark blue.
+We continue to assume 32
+bit addresses so there are 2**30 words in the address space.
+
+</P><P>Let's review various possible cache organizations and determine for
+each how large is the tag and how the various address bits are used.
+We will always use a 16KB cache.  That is the size of the
+<STRONG>data</STRONG> portion of the cache is 16KB = 4 kilowords =
+2**12 words.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/addr-bits.png" ,="" align="right"></P><P>
+
+</P><OL>
+<LI>Direct mapped, blocksize 1 (word).
+    <UL>
+    <LI>Since the blocksize is one word, there are 2**30 memory blocks
+    and all the address bits (except the 2 LOBs that specify the byte
+    within the word) are used for the memory block number.
+    Specifically 30 bits are so used.
+    </LI><LI>The cache has 2**12 words, which is 2**12 blocks.
+    </LI><LI>So the low order 12 bits of the memory block number give the
+    index in the cache (the cache block number), shown in cyan.
+    </LI><LI>The remaining 18 (30-12) bits are the tag, shown in red.
+    </LI></UL><BR>
+
+</LI><LI>Direct mapped, blocksize 8
+    <UL>
+    <LI>Three bits of the address give the word within the 8-word
+    block.  These are drawn in magenta.  
+    </LI><LI>The remaining 27 HOBs of the
+    memory address give the memory block number.
+    </LI><LI>The cache has 2**12 words, which is 2**9 blocks.
+    </LI><LI>So the low order 9 bits of the memory block number gives the
+    index in the cache.
+    </LI><LI>The remaining 18 bits are the tag
+    </LI></UL><BR>
+
+</LI><LI>4-way set associative, blocksize 1
+    <UL>
+    <LI>Blocksize is 1 so there are 2**30 memory blocks and 30 bits
+    are used for the memory block number.
+    </LI><LI>The cache has 2**12 blocks, which is 2**10 sets (each set has
+    4=2**2 blocks).
+    </LI><LI>So the low order 10 bits of the memory block number gives
+    the index in the cache.
+    </LI><LI>The remaining 20 bits are the tag.  As the associativity grows
+    the tag gets bigger.  Why?<BR>
+    Growing associativity reduces the number of sets into which a
+    block can be placed.  This increases the number of memory blocks
+    that be placed in a given set.  Hence more bits are needed to see
+    if the desired block is there.
+    </LI></UL><BR>
+    
+</LI><LI>4-way set associative, blocksize 8
+    <UL>
+    <LI>Three bits of the address give the word within the block.
+    </LI><LI>The remaining 27 HOBs of the
+    memory address give the memory block number.
+    </LI><LI>The cache has 2**12 words = 2**9 blocks = 2**7 sets.
+    </LI><LI>So the low order 7 bits of the memory block number gives
+    the index in the cache.
+    </LI></UL>
+</LI></OL>
+
+<P><STRONG>Homework:</STRONG> 7.39, 7.40 (not assigned 1999-2000)
+
+</P><H4>Improvement: Multilevel caches</H4>
+
+<P>Modern high end PCs and workstations all have at least two levels
+of caches: A very fast, and hence not too big, first level (L1) cache
+together with a larger but slower L2 cache.
+
+</P><P>When a miss occurs in L1, L2 is examined and only if a miss occurs
+there is main memory referenced.
+
+</P><P>So the average miss penalty for an L1 miss is
+</P><PRE>(L2 hit rate)*(L2 time) + (L2 miss rate)*(L2 time + memory time)
+</PRE>
+
+We are assuming L2 time is the same for an L2 hit or L2 miss.  We are
+also assuming that the access doesn't begin to go to memory until the
+L2 miss has occurred.
+
+<P>Do an example
+
+</P><UL>
+<LI>Assume
+    <OL>
+    <LI>L1 I-cache miss rate 4%
+    </LI><LI>L2 D-cache miss rate 5%
+    </LI><LI>40% of instructions reference data
+    </LI><LI>L2 miss rate 6%
+    </LI><LI>L2 time of 15ns
+    </LI><LI>Memory access time 100ns
+    </LI><LI>Base CPI of 2
+    </LI><LI>Clock rate 400MHz
+    </LI></OL>
+</LI><LI>How many instructions per second does this machine execute
+</LI><LI>How  many instructions per second would this machine execute if
+the L2 cache were eliminated.
+</LI><LI>How many instructions per second would this machine execute if
+both caches were eliminated.
+</LI><LI>How many instructions per second would this machine execute if the
+L2 cache had a 0% miss rate (L1 as originally specified).
+</LI><LI>How many instructions per second would this machine execute if
+both L1 caches had a 0% miss rate
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/virtual-memory.png" align="right"></P><P>
+
+</P><H2>7.4: Virtual Memory</H2>
+
+<P>I realize this material was covered in operating systems class
+(V22.0202).  I am just reviewing it here.  The goal is to show the
+similarity to caching, which we just studied.  Indeed, (the demand
+part of) demand paging <EM>is</EM> caching: In demand paging the
+memory serves as a cache for the disk, just as in caching the cache
+serves as a cache for the memory.
+
+</P><P>The names used are different and there are other differences as well.
+
+</P><P>
+<TABLE border="1">
+<TBODY><TR><TH>Cache concept</TH><TH>Demand paging analogue</TH>
+</TR><TR><TD>Memory block</TD><TD>Page</TD>
+</TR><TR><TD>Cache block</TD><TD>Page Frame (frame)</TD>
+</TR><TR><TD>Blocksize</TD><TD>Pagesize</TD>
+</TR><TR><TD>Tag</TD><TD>None (table lookup)</TD>
+</TR><TR><TD>Word in block</TD><TD>Page offset</TD>
+</TR><TR><TD>Valid bit</TD><TD>Valid bit</TD>
+</TR></TBODY></TABLE>
+
+</P><P>
+<TABLE border="1">
+<TBODY><TR><TH>Cache concept</TH><TH>Demand paging analogue</TH>
+</TR><TR><TD>Associativity</TD><TD>None (fully associative)</TD>
+</TR><TR><TD>Miss</TD><TD>Page fault</TD>
+</TR><TR><TD>Hit</TD><TD>Not a page fault</TD>
+</TR><TR><TD>Miss rate</TD><TD>Page fault rate</TD>
+</TR><TR><TD>Hit rate</TD><TD>1 - Page fault rate</TD>
+</TR><TR><TD>Placement question</TD><TD>Placement question</TD>
+</TR><TR><TD>Replacement question</TD><TD>Replacement question</TD>
+</TR></TBODY></TABLE>
+
+</P><HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #24
+========</BIG></STRONG></DIV><HR>
+
+<P><STRONG>Homework:</STRONG> 7.39, 7.40 (should have been asked earlier)
+
+</P><UL>
+
+<P><IMG align="right" src="./Class Notes for Computer Architecture_files/virtual-to-physical.png"></P><P>
+
+</P><LI>For both caching and demand paging, the <STRONG>placement</STRONG>
+question is trivial since the items are fixed size (no first-fit,
+best-fit, buddy, etc).<BR><BR>
+
+</LI><LI>The <STRONG>replacement</STRONG> question is not trivial.  (H&amp;P
+list this under the placement question, which I believe is in error).
+Approximations to LRU are popular for both caching and demand
+paging.<BR><BR>
+
+</LI><LI>The cost of a page fault vastly exceeds the cost of a cache miss
+so it is worth while in paging to slow down hit processing to lower
+the miss rate.  Hence demand paging is fully associative and uses a
+table to locate the frame in which the page is located.<BR><BR>
+
+</LI><LI>The figures to the right are for demand paging.  But they can be
+interpreted for caching as well.
+
+<BR clear="right">
+<P><IMG align="right" src="./Class Notes for Computer Architecture_files/page-table.png"></P><P>
+
+    </P><UL>
+    <LI>The (virtual) page number is the memory block number
+
+    </LI><LI>The Page offset is the word-in-block
+
+    </LI><LI>The frame (physical page) number is the cache block number
+    (which is the index into the cache).
+
+    </LI><LI>Since demand paging uses full associativity, the tag is the
+    entire memory block number.  Instead of checking every cache block
+    to see if the tags match, a (page) table is used.
+    </LI></UL><BR>
+
+
+</LI><LI>There are of courses differences as well.
+    <UL>
+    <LI>When the valid bit is off for a cache entry, the entry is
+    junk.
+    </LI><LI>When the valid bit is off for a page table entry, then entry
+    still contains important data, specifically the location on the
+    disk where the page can be found.
+    </LI></UL>
+
+</LI></UL>
+
+<P><STRONG>Homework:</STRONG> 7.32
+
+<BR clear="right"><BR>
+
+</P><H4>Write through vs. write back</H4>
+
+<P>Question:  On a write hit should we write the new value through to
+(memory/disk) or just keep it in the (cache/memory) and write it back
+to (memory/disk) when the (cache-line/page) is replaced.
+
+</P><UL>
+<LI>Write through is simpler since write back requires two operations
+at a single event.
+</LI><LI>But write-back has fewer writes to (memory/disk) since multiple
+writes to the (cache-line/page) may occur before the (cache-line/page)
+is evicted.
+</LI><LI>For caching the cost of writing through to memory is probably less
+than 100 cycles so with a write buffer the cost of write through is
+bearable and it does simplify the situation.
+</LI><LI>For paging the cost of writing through to disk is on the order of
+1,000,000 cycles.  Since write-back has fewer writes to disk, it is used.
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/tlb.png" align="right">
+
+</P><H4>Translation Lookaside Buffer (TLB)</H4>
+
+<P>A TLB is a cache of the page table
+
+</P><UL>
+<LI>Needed because otherwise every memory reference in the program
+would require two memory references, one to read the page table and
+one to read the requested memory word.<BR><BR>
+
+</LI><LI>Typical TLB parameter values
+    <UL>
+    <LI>Size: hundreds of entries
+    </LI><LI>Block size: 1 entry
+    </LI><LI>Hit time: 1 cycle
+    </LI><LI>Miss time: tens of cycles
+    </LI><LI>Miss rate: Low (&lt;= 2%)
+    </LI></UL><BR>
+    
+</LI><LI>In the diagram on the right
+    <UL>
+    <LI>The green path is the fastest (TLB hit)
+    </LI><LI>The red is the slowest (page fault)
+    </LI><LI>The yellow is in the middle (TLB miss, no page fault)
+    </LI></UL>
+</LI></UL>
+
+<BR clear="right"><BR>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/tlb+cache.png" align="right"></P><P>
+
+</P><H4>Putting it together: TLB + Cache</H4>
+
+<P>This is the decstation 3100
+
+</P><UL>
+<LI>Virtual address = 32 bits
+</LI><LI>Physical address = 32 bits
+</LI><LI>Fully associative TLB (naturally)
+</LI><LI>Direct mapped cache
+</LI><LI>Cache blocksize = one word
+</LI><LI>Pagesize = 4KB = 2^12 bytes
+</LI><LI>Cache size = 16K entries = 64KB
+</LI></UL>
+
+<P>Actions taken
+
+</P><OL>
+<LI>The page number is searched in the fully associative TLB
+</LI><LI>If a TLB hit occurs, the frame number from the TLB together with
+the page offset gives the physical address.  A TLB miss causes an
+exception to reload the TLB, which we do not discuss.
+</LI><LI>The physical address is broken into a cache tag and cache index
+(plus a two bit byte offset that is not used for word references).
+</LI><LI>If the reference is a write, just do it without checking for a
+cache hit (this is possible because the cache is so simple as we
+discussed <A href="http://cs.nyu.edu/courses/fall99/V22.0436-001/class-notes.html#3100-write-action">previously</A>).
+</LI><LI>For a read, if the tag located in the cache entry specified by the
+index matches the tag in the physical address, the referenced word has
+been found in the cache; i.e., we had a read hit.
+</LI><LI>For a read miss, the cache entry specified by the index is fetched
+from memory and the data returned to satisfy the request.
+</LI></OL>
+
+<H4>Hit/Miss possibilities</H4>
+
+<TABLE border="1">
+<TBODY><TR><TH>TLB</TH><TH>Page</TH><TH>Cache</TH><TH>Remarks</TH>
+</TR><TR><TD>hit</TD><TD>hit</TD><TD>hit</TD><TD>
+Possible, but page table not checked on TLB hit, data from cache</TD>
+</TR><TR><TD>hit</TD><TD>hit</TD><TD>miss</TD><TD>
+Possible, but page table not checked, cache entry loaded from memory</TD>
+</TR><TR><TD>hit</TD><TD>miss</TD><TD>hit</TD><TD>
+Impossible, TLB references in-memory pages</TD>
+</TR><TR><TD>hit</TD><TD>miss</TD><TD>miss</TD><TD>
+Impossible, TLB references in-memory pages</TD>
+</TR><TR><TD>miss</TD><TD>hit</TD><TD>hit</TD><TD>
+Possible, TLB entry loaded from page table, data from cache</TD>
+</TR><TR><TD>miss</TD><TD>hit</TD><TD>miss</TD><TD>
+Possible, TLB entry loaded from page table, cache entry loaded from memory</TD>
+</TR><TR><TD>miss</TD><TD>miss</TD><TD>hit</TD><TD>
+Impossible, cache is a subset of memory</TD>
+</TR><TR><TD>miss</TD><TD>miss</TD><TD>miss</TD><TD>
+Possible, page fault brings in page, TLB entry loaded, cache loaded</TD>
+</TR></TBODY></TABLE>
+
+<P><STRONG>Homework:</STRONG> 7.31, 7.33
+
+</P><H2>7.5: A Common Framework for Memory Hierarchies</H2>
+
+<H3>Question 1: Where can the block be placed?</H3>
+
+<P>This could be called the <EM>placement</EM> question.  There is
+another placement question in OS memory memory management.  When
+dealing with varying size pieces (segmentation or whole program
+swapping), the available space becomes broken into varying size
+available blocks and varying size allocated blocks (called holes).  We
+do not discussing the above placement question in this course (but
+presumably it was in 204 when you took it and for sure it will be in
+204 next semester--when I teach it).
+
+</P><P>The placement question we do study is the associativity of the
+structure.  
+
+</P><P>Assume a cache with N blocks
+
+</P><UL>
+<LI>For a direct mapped caches a block can only be placed in one
+slot.  That is, there is one block per set and hence the number of
+sets equals N, the number of blocks.
+</LI><LI>For fully associative caches the block can be placed in any of the
+N slos.  That is, there are N blocks per set and hence one set.
+</LI><LI>For k-way associative caches the block can be placed in any of k
+slots.  That is, there are k blocks per set and hence N/k sets
+</LI><LI>1-way assosciativity is direct mapped.
+</LI><LI>For a cache with n blocks, n-way associativity is the same as
+fully associative.
+</LI></UL>
+
+<H3>Typical Values</H3>
+
+<TABLE border="1">
+<TBODY><TR><TD>Feature</TD>
+    <TD>Typical values<BR>for caches</TD>
+    <TD>Typical values<BR>for paged memory</TD>
+    <TD>Typical values<BR>for TLBs</TD>
+</TR><TR><TD>Size</TD>
+    <TD>8KB-8MB</TD>
+    <TD>16MB-2GB</TD>
+    <TD>256B-32KB</TD>
+</TR><TR><TD>Block size</TD>
+    <TD>16B-256B</TD>
+    <TD>4KB-64KB</TD>
+    <TD>4B-32B</TD>
+</TR><TR><TD>Miss penalty in clocks</TD>
+    <TD>10-100</TD>
+    <TD>1M-10M</TD>
+    <TD>10-100</TD>
+</TR><TR><TD>Miss rate</TD>
+    <TD>.1%-10%</TD>
+    <TD>.000001-.0001%</TD>
+    <TD>.01%-2%</TD><TD>
+</TD></TR></TBODY></TABLE>
+
+<H3>Question 2: How is a block found?</H3>
+
+<TABLE border="1=&quot;&quot;">
+<TBODY><TR><TH>Associativity</TH><TH>Location method</TH><TH>Comparisons Required</TH>
+</TR><TR><TD>Direct mapped</TD><TD>Index</TD><TD>1</TD>
+</TR><TR><TD>Set Associative</TD><TD>Index the set, search among elements
+                       </TD><TD>Degree of associativity</TD>
+</TR><TR><TD rowspan="2">Full</TD><TD>Search all cache entries
+                      </TD><TD>Number of cache blocks</TD>
+</TR><TR><TD>Separate lookup table</TD><TD>0</TD>
+</TR></TBODY></TABLE>
+
+<P>The difference in sizes and costs for demand paging vs. caching,
+leads to a different choice implementation of finding the block.
+Demand paging always uses the bottom row with a separate table (page
+table) but caching never uses such a table.
+
+</P><UL>
+<LI>With page faults so expensive, misses must be reduced as much as
+possible.  Hence full associativity is used.
+</LI><LI>With page faults so expensive, a software implementation can be
+used so no extra hardware is needed to index the table.
+</LI><LI>The large block size (called page size) means that the extra table
+is a small fraction of the space.
+</LI></UL>
+
+<H3>Question 3: Which block should be replaced?</H3>
+
+<P>This is called the <EM>replacement</EM> question and is much
+studied in demand paging (remember back to 202).
+
+</P><UL>
+<LI>For demand paging with miss costs so high and associativity so
+high (fully associative), the replacement policy is important and some
+approximation to LRU is used.
+</LI><LI>For paging, the hit time must be small so simple schemes are
+used.  For 2-way associativity, LRU is trivial.  For higher
+associativity (but associativity is never very high) crude
+approximations may be used and sometimes random.
+replacement is used.
+</LI></UL>
+
+<H3>Question 4: What happens on a write?</H3>
+
+<OL>
+<LI>Write-through
+    <UL>
+    <LI>Data written to both the cache and main memory (in general to
+    both levels of the hierarchy).
+    </LI><LI>Sometimes used for caching, never used for demand paging
+    </LI><LI>Advantages
+        <UL>
+        <LI>Misses are simpler and cheaper (no copy back)
+        </LI><LI>Easier to implement, especially for block size 1, which we
+        did in class.
+        </LI><LI>For blocksize &gt; 1, a write miss is more complicated since
+        the rest of the block now is invalid.  Fetch the rest of the
+        block from memory (or mark those parts invalid by extra valid
+        bits--not covered in this course).
+        </LI></UL>
+    </LI></UL>
+</LI></OL>
+
+<P><STRONG>Homework:</STRONG> 7.41
+
+</P><OL start="2">
+
+<LI>Write-back
+    <UL>
+    <LI>Data only written to the cache.  The memory has stale data,
+    but becomes up to date when the cache block is subsequently
+    replaced in the cache.
+    </LI><LI>Only real choice for demand paging since writing to the lower
+    level of the memory hierarch (in this case disk) is so slow.
+    </LI><LI>Advantages
+        <UL>
+        <LI>Words can be written at cache speed not memory speed
+        </LI><LI>When blocksize &gt; 1, writes to multiple words in the cache
+        block are only written once to memory (when the block is
+        replaced).
+        </LI><LI>Multiple writes to the same word in a short period are
+        written to memory only once.
+        </LI><LI>When blocksize &gt; 1, the replacement can utilize a high
+        bandwidth transfer.  That is, writing one 64-byte block is
+        faster than 16 writes of 4-bytes each.
+        </LI></UL>
+    </LI></UL><BR>
+
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #25
+========</BIG></STRONG></DIV><HR> 
+
+<UL>
+<LI>Write miss policy (advanced)
+    <UL>
+    <LI>For demand paging, the case is pretty clear.  Every
+    implementation I know of allocates a frame for the page miss and
+    fetches the page from disk.  That is it does both an
+    <EM>allocate</EM> and a <EM>fetch</EM>.
+    </LI><LI>For caching this is not always the case.  Since there are two
+    optional actions there are four possibilities.
+        <OL>
+        <LI>Don't allocate and don't fetch:  This is sometimes called
+        write around.  It is done when the data is not expected to be
+        read and is large.
+        </LI><LI>Don't allocate but do fetch:  Impossible, where would you
+        put the fetched block?
+        </LI><LI>Do allocate, but don't fetch:  Sometimes called
+        no-fetch-on-write.  Also called SANF
+        (store-allocate-no-fetch).  Requires multiple valid bits per
+        block since the just-written word is valid but the others are
+        not (since we updated the tag to correspond to the
+        just-written word).
+        </LI><LI>Do allocate and do fetch:  The normal case we have been
+        using. 
+        </LI><LI>
+        </LI></OL>
+    </LI></UL>
+</LI></UL></LI></OL>
+
+<H1>Chapter 8: Interfacing Processors and Peripherals.</H1>
+
+<P>With processor speed increasing 50% / year, I/O must improved or
+essentially all jobs will be I/O bound.
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/IO-collection.png" align="right"></P><P>
+
+</P><P>The diagram on the right is quite oversimplified for modern PCs but
+serves the purpose of this course.  
+
+</P><H2>8.2: I/O Devices</H2>
+
+<P>Devices are quite varied and their datarates vary enormously.  
+</P><UL>
+<LI>Some devices like keyboards and mice have tiny datarates.
+</LI><LI>Printers, etc have moderate datarates.
+</LI><LI>Disks and fast networks have high rates.
+</LI><LI>A good graphics card and monitor has huge datarate
+</LI></UL>
+
+<P>Show a real disk opened up and illustrate the components
+</P><UL>
+<LI>Platter
+</LI><LI>Surface
+</LI><LI>Head
+</LI><LI>Track
+</LI><LI>Sector
+</LI><LI>Cylinder
+</LI><LI>Seek time
+</LI><LI>Rotational latency
+</LI><LI>Transfer time
+</LI></UL>
+
+<H2>8.4: Buses</H2>
+
+<P>A bus is a shared communication link, using one set of wires to
+connect many subsystems.
+
+</P><UL>
+<LI>Sounds simple (once you have tri-state drivers) ...<BR><BR>
+</LI><LI>... but it's not.
+</LI><LI>Very serious electrical considerations (e.g. signals reflecting
+    from the end of the bus.  We have ignored (and will continue to
+    ignore) all electrical issues.<BR><BR>
+</LI><LI>Getting high speed buses is state-of-the-art engineering.<BR><BR>
+</LI><LI><STRONG>Tri-state drivers</STRONG>:
+    <UL>
+    <LI>A output device that can either
+        <OL>
+        <LI>Drive the line to 1
+        </LI><LI>Drive the line to 0
+        </LI><LI>Not drive the line at all (be in a high impedance state)
+        </LI></OL>
+    </LI><LI>Can have many of these devices devices connected to the same
+        wire providing careful to be sure that all but one are in the
+        high-impedance mode. 
+    </LI><LI>This is why a single bus can have many output devices attached
+        (but only one actually performing output at a given time). 
+    </LI></UL><BR>
+</LI><LI>Buses support bidirectional transfer, sometimes using separate
+    wires for each direction, sometimes not.<BR><BR> 
+</LI><LI>Normally the memory bus is kept separate from the I/O bus.  It is
+    a fast <STRONG>synchronous</STRONG> bus and I/O devices can't keep
+    up.<BR><BR>
+</LI><LI>Indeed the memory bus is normally custom designed (i.e., companies
+    design their own).<BR><BR> 
+</LI><LI>The graphics bus is also kept separate in modern designs for
+    bandwidth reasons, but is an industry standard (the so called AGP
+    bus).<BR><BR>
+</LI><LI>Many I/O buses are industry standards (ISA, EISA, SCSI, PCI) and
+    support <STRONG>open architectures</STRONG>, where components can
+    be purchased from a variety of vendors.<BR><BR> 
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/system-dia.png"></P><P>
+
+</P><P><IMG src="./Class Notes for Computer Architecture_files/buses.png" align="right"></P><P>
+
+</P><UL>
+<LI>This  figure above is similar to H&amp;P's figure 8.9(c), which is
+    shown on the right.  The primary difference is that they have the
+    processor directly connected to the memory with a processor memory
+    bus.<BR><BR> 
+</LI><LI>The processor memory bus has the highest bandwidth, the backplane
+    bus less and the I/O buses the least.  Clearly the (sustained)
+    bandwidth of each I/O bus is limited by the backplane bus.
+    Why?<BR>
+Because all the data passing on an I/O bus must also pass on the
+    backplane bus.  Similarly the backplane bus clearly has at least
+    the bandwidth of an I/O bus.<BR><BR> 
+</LI><LI>Bus adaptors are used as interfaces between buses.  They perform
+    speed matching and may also perform buffering, data width
+    matching, converting between <STRONG>synchronous</STRONG> and
+    <STRONG>asynchronous</STRONG> buses.  <BR><BR>
+</LI><LI>For a realistic example draw, on the board the diagram from
+    <EM>Microprocessor Reports</EM> on the new Intel chip set.  I am
+    not sure of copyright questions so will not put it in the
+    notes.<BR><BR>
+</LI><LI>Bus adaptors have a variety of names, e.g. host adapters, hubs,
+    bridges.<BR><BR>
+</LI><LI>Bus lines (i.e. wires) include those for data (data lines),
+    function codes, device addresses.  Data and address are considered
+    data and the function codes are considered control (remember our
+    datapath for MIPS).<BR><BR>
+</LI><LI>Address and data may be multiplexed on the same lines (i.e., first
+    send one then the other) or may be given separate lines.  One is
+    cheaper (good) and the other has higher performance (also
+    good). Which is which?<BR>
+    Ans: the multiplexed version is cheaper.
+</LI></UL>
+
+<H3>Synchronous vs. Asynchronous Buses</H3>
+
+<P>A <STRONG>synchronous</STRONG> bus is <STRONG>clocked</STRONG>.
+
+</P><UL>
+<LI>One of the lines in the bus is a clock that serves as the clock
+    for all the devices on the bus.<BR><BR>
+    
+</LI><LI>All the bus actions are done on fixed clock cycles.  For example,
+    4 cycles after receiving a request, the memory delivers the first
+    word.<BR><BR>
+    
+</LI><LI>This can be handled by a simple finite state machine (FSM).
+    Basically, once the request is seen everything works one clock at
+    a time.  There are no decisions like the ones we will see for an
+    asynchronous bus.<BR><BR>
+    
+</LI><LI>Because the protocol is so simple it requires few gates and is
+    very fast.  So far so good.<BR><BR>
+
+</LI><LI>Two problems with synchronous buses.
+
+    <OL>
+    <LI>All the devices must run at the same speed.
+    </LI><LI>The bus must be short due to <EM>clock skew</EM>
+    </LI></OL><BR>
+
+</LI><LI>Processor to memory buses are now normally synchronous.
+
+    <UL>
+    <LI>The number of devices on the bus are small
+    </LI><LI>The bus is small
+    </LI><LI>The devices (i.e. processor and memory) are prepared to run at
+        the same speed 
+    </LI><LI>High speed is needed
+    </LI></UL>
+
+</LI></UL>
+
+<P>An <STRONG>asynchronous</STRONG> bus is <STRONG>not</STRONG> clocked.
+
+</P><UL>
+<LI>Since the bus is not clocked a variety of devices can be on the
+    same bus.<BR><BR>
+
+</LI><LI>There is no problem with clock skew (since there is no clock).<BR>
+<BR>
+</LI><LI>But the bus must now contain control lines to coordinate
+transmission.<BR>
+<BR>
+</LI><LI>Common is a handshaking protocol.<BR>
+<BR>
+</LI><LI>We now show a protocol in words and FSM for a device to obtain
+    data from memory.
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/fsm.png" align="right"></P><P>
+
+</P><OL>
+<LI>The device makes a request (asserts ReadReq and puts the
+desired address on the data lines).<BR>
+<BR>
+</LI><LI>Memory, which has been waiting, sees ReadReq, records the
+address and asserts Ack.<BR> 
+<BR>
+</LI><LI>The device waits for the Ack; once seen, it drops the
+data lines and deasserts ReadReq.<BR>
+<BR>
+</LI><LI>The memory waits for the request line to drop.  Then it can drop
+Ack (which it knows the device has now seen).  The memory now at its
+leasure puts the data on the data lines (which it knows the device is
+not driving) and then asserts DataRdy.  (DataRdy has been deasserted
+until now).<BR>
+<BR>
+</LI><LI>The device has been waiting for DataRdy.  It detects DataRdy and
+records the data.  It then asserts Ack indicating that the data has
+been read.<BR>
+<BR>
+</LI><LI>The memory sees Ack and then deasserts DataRdy and releases the
+data lines.<BR>
+<BR>
+</LI><LI>The device seeing DataRdy low deasserts Ack ending the show.  
+</LI></OL>
+
+<BR clear="right">
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #26
+========</BIG></STRONG></DIV><HR> 
+
+<H3>Improving Bus Performance</H3>
+
+<P>These improvements mostly come at the cost of increased expense and/or
+complexity. 
+
+</P><OL>
+<LI>Hierarchy of buses.<BR>
+<BR>
+</LI><LI>Synchronous instead of asynchronous protocols.
+    <UL>
+    <LI>Synchronous is actually simplier, but it essentially implies a
+    hierarchy of protocols since not all devices can operate at the
+    same speed.
+    </LI></UL><BR>
+
+</LI><LI>Wider data path:  Use more wires, send more at once.<BR>
+<BR>
+</LI><LI>Separate address and data lines: Same as above.<BR>
+<BR>
+</LI><LI>Block transfers: Permit a single transaction to transfer more than
+one busload of data.  Saves the time to release and acquire the bus,
+but the protocol is more complex.<BR>
+<P><IMG src="./Class Notes for Computer Architecture_files/daisy-chain.png" align="right"></P><P>
+</P></LI><LI>Obtaining bus access:
+    <UL>
+    <LI>The simplest scheme is to permit only one bus
+    <STRONG>master</STRONG>.
+        <UL>
+        <LI>That is on each bus only one device is permited to
+        initiate a bus transaction.
+        </LI><LI>The other devices are <STRONG>slaves</STRONG> that only
+        respond to requests.
+        </LI><LI>With a single master, there is no issue of arbitrating
+        among multiple requests.
+        </LI></UL>
+    </LI><LI>One can have multiple masters with <STRONG>daisy
+    chaining</STRONG> of the <STRONG>grant line</STRONG>.
+        <UL>
+        <LI>Any device can raise the request line.
+        </LI><LI>The device with the request raises the release line when
+        done.
+        </LI><LI>The arbiter monitors the request and request lines and
+        raises the grant line.
+        </LI><LI>The grant signal is passed from one to the other so the
+        devices near the arbiter have priority and can starve the ones
+        further away.
+        </LI><LI>Passing the grant from device to device takes time.
+        </LI><LI>Simple but not fair or high performance
+        </LI></UL>
+    </LI><LI>Centralized parallel arbiter: Separate request lines from each
+    device and separate grant lines.  The arbiter decides which device
+    should be granted the bus.
+    </LI><LI>Distributed arbitration by self-selection: Requesting
+    processes identify themselves on the bus and decide individually
+    (and consistently) which one gets the grant.
+    </LI><LI>Distributed arbitration by collision detection: Each device
+    transmits whenever it wants, but detects collisions and retries.
+    Ethernet uses this scheme (but not new switched ethernets).
+    </LI></UL>
+</LI></OL>
+<BR clear="right"><BR>
+
+<TABLE border="1">
+<TBODY><TR><TH>Option</TH><TH>High performance</TH><TH>Low cost</TH></TR>
+<TR><TD>bus width</TD><TD>separate address and data lines</TD>
+    <TD>multiplex address and data lines</TD></TR>
+<TR><TD>data width</TD><TD>wide</TD><TD>narrow</TD></TR>
+<TR><TD>transfer size</TD><TD>multiple bus loads</TD><TD>single bus loads</TD></TR>
+<TR><TD>bus masters</TD><TD>multiple</TD><TD>single</TD></TR>
+<TR><TD>clocking</TD><TD>synchronous</TD><TD>asynchronous</TD></TR>
+</TBODY></TABLE>
+
+<BR clear="right">
+
+<HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #27
+========</BIG></STRONG></DIV><HR> 
+
+<P>Do on the board the example on pages 665-666
+</P><UL>
+<LI>Memory and bus support two widths of data transfer: 4 words and 16
+words
+</LI><LI>64-bit synchronous bus; 200MHz; 1 clock for addr; 1 for data.
+</LI><LI>Two clocks of ``rest'' between bus accesses
+</LI><LI>Memory access times: 4 words in 200ns; additional 4 word blocks in
+20ns per block.
+</LI><LI>Can overlap transferring data with reading next data.
+</LI><LI>Find
+    <OL>
+    <LI>Sustained bandwidth and latency for reading 256 words using
+    both size transfers
+    </LI><LI>How many bus transactions per sec for each (addr+data)
+    </LI></OL>
+</LI><LI>Four word blocks
+    <UL>
+    <LI>1 clock to send addr
+    </LI><LI>40 clocks read mem
+    </LI><LI>2 clocks to send data
+    </LI><LI>2 idle clocks
+    </LI><LI>45 total clocks
+    </LI><LI>256/4=64 transactions needed so latency is 64*45*5ns=14.4us
+    </LI><LI>64 trans per 14.4us = 64/14.4 trans per 1us = 4.44M trans per
+    sec
+    </LI><LI>Bandwidth = 1024 bytes per 14.4us = 1024/14.4 B/us = 71.11MB/sec
+    </LI></UL>
+</LI><LI>Sixteen word blocks
+    <UL>
+    <LI>1 clock for addr
+    </LI><LI>40 clocks for reading first 4 words
+    </LI><LI>2 clocks to send
+    </LI><LI>2 clocks idle
+    </LI><LI>4 clocks to read next 4 words.  But this is free! Why?<BR>
+    Because it is done during the send and idle of previous block.
+    </LI><LI>So we only pay for the long initial read
+    </LI><LI>Total = 1 + 40 + 4*(2+2) = 57 clocks.
+    </LI><LI>16 transactions neeed; latency = 57*16*5ns=4.56ms, which is
+    <STRONG>much better</STRONG> than with 4 word blocks.
+    </LI><LI>16 transactions per 4.56us = 3.51M transactions/sec
+    </LI><LI>Bandwidth = 1024B per 4.56ms = 224.56MB/sec
+    </LI></UL>
+</LI></UL>
+
+<H2>8.5: Interfacing I/O Devices</H2>
+
+<H3>Giving commands to I/O Devices</H3>
+
+<P>This is really an OS issue.  Must write/read to/from device
+registers, i.e. must communicate commands to the controller.
+</P><UL>
+<LI>The controler has a few registers which can be read and/or written
+by the processor, similar to how the processor reads and writes
+memory.
+</LI><LI>Nearly every controler contains
+    <UL>
+    <LI>A data register, which is readable for an input device
+    (e.g., a simple keyboard), writable for an output device (e.g., a simple
+    printer), and both readable and writable for input/output devices
+    (e.g., disks).
+    </LI><LI>A control register for giving commands to the device.
+    </LI><LI>A readable status register for reporting errors and announcing
+    when the device is ready for the next action (e.g., for a keyboard
+    telling when the data register is valid, and for a printer telling
+    when the character to be printed has be successfully retrieved
+    from the data register).  Remember the communication protocol we
+    studied where ack was used.
+    </LI></UL>
+</LI><LI>Many controllers have more registers
+</LI></UL>
+
+<H3>Communicating with the Processor</H3>
+
+<P>Should we check periodically or be told when there is something to
+do?  Better yet can we get someone else to do it since we are not
+needed for the job?
+
+</P><UL>
+<LI>We get mail at home once a day.
+</LI><LI>At some business offices mail arrives a few times per day.
+</LI><LI>No problem checking once an hour for mail.
+</LI><LI>If email wasn't buffered, you would have to check several times
+per minute (second?, milisecond?).  
+</LI><LI>Checking email this often is too much of a burden and most of the
+time when you check you find there is none so the check was wasted
+</LI></UL>
+
+<H4>Polling</H4>
+
+<P>Processor continually checks the device status to see if action is
+required.
+
+</P><UL>
+<LI>Like the mail example above.
+</LI><LI>For a general purpose OS, one needs a timer to tell the processor
+it is time to check (OS issue).
+</LI><LI>For an embedded system (microwave) make the checking part of the
+main control loop, which is guaranteed to be executed at a minimum
+frequency.
+</LI><LI>For a keyboard or mouse with very low data rates, can afford to
+have the main CPU check.  Do an example where you must sample 60 times
+a second and a modern (say 600MHz) processor takes a few hundred
+clocks to do a poll.
+</LI><LI>It is a little better for slave-like output devices such as a
+simple printer.  Then the processor only has to poll after a request
+has been made until the request has been satisfied.
+</LI></UL>
+
+<P>Do on the board the example on pages 676-677
+
+</P><UL>
+<LI>Cost of a poll is 400 clocks
+</LI><LI>CPU is 500MHz
+</LI><LI>How much of the CPU is needed to poll
+    <OL>
+    <LI>A mouse that requires 30 polls per sec.
+    </LI><LI>A floppy that sends 2-byte at a time and achieves 50KB/sec.
+    </LI><LI>A hard disk that sends 16-bytes at a time and achieves 4MB/sec.
+    </LI></OL>
+</LI><LI>For mouse 12,000 cycles/sec
+</LI><LI>For floppy need 25K polls/sec
+</LI><LI>For disk need 250K polls/sec
+</LI><LI>Would not do polls for floppy and disk until make a request but
+then must keep polling until request statisfied.
+</LI></UL>
+
+<H4>Interrupt driven I/O</H4>
+
+<P>Processor is told by the device when to look.  The processor is
+<EM>interrupted</EM> by the device.
+
+</P><UL>
+<LI>Dedicated lines (i.e. wires) on the bus are assigned for
+interrupts.
+</LI><LI>When a device wants to send an interrupt it asserts the
+corresponding line.
+</LI><LI>The processor checks for interrupts after each instruction.
+</LI><LI>If an interrupt is pending (i.e. if the line is asserted) the
+processor
+    <OL>
+    <LI>Saves the PC and perhaps some registers.
+    </LI><LI>Switches to kernel (i.e. privileged) mode.
+    </LI><LI>Jumps to a location specified in the hardware (the
+    <EM>interrupt handler</EM>.
+    </LI><LI>OS takes over.
+    </LI></OL>
+</LI><LI>What if we have several different devices and want to do different
+things depending on what caused the interrupt?
+</LI><LI>Use <STRONG>vectored</STRONG> interrupts.
+    <UL>
+    <LI>Instead of jumping to a single fixed location have a set of
+    locations.
+    </LI><LI>Could have several interrupt lines if line 1 is asserted, jump
+    to location 100, if line 2 isserted jump to location 200, etc.
+    </LI><LI>Could have just one line and have the device send the address
+    to jump to.
+    </LI></UL>
+</LI><LI>There are other issues with interrupts that are (hopefully) taught
+in OS.  For example, what happens if an interrupt occurs while an
+interrupt is being processed.  For another example, what if one
+interrupt is more important than another.
+</LI><LI>The time for processing an interrupt is typically longer than the
+type for a poll.  But interrupts are <EM>not</EM> generated when the
+device is idle, a big advantage.
+</LI></UL>
+
+<P>Do on the board the example on pages 681-682
+
+</P><UL>
+<LI>Same hard disk and processor as above.
+</LI><LI>Cost of servicing an interrrupt is 500 cycles
+</LI><LI>Disk is active only 5% of the time
+</LI><LI>What percent of the processor would be used to service the
+interrupts?
+</LI><LI>Cycles/sec needed for processing interrupt is 125 million
+</LI><LI>25% of processor is needed.
+</LI><LI>1.25% since only active 5%.
+</LI></UL>
+
+<P><IMG src="./Class Notes for Computer Architecture_files/dma.png" align="right"></P><P>
+</P><H4>Direct Memory Access (DMA)</H4>
+
+<P>The processor initiates the I/O operation then ``something else''
+takes care of it and notifies the processor when it is done (or if an
+error occurs).
+
+</P><UL>
+<LI>Have a DMA engine (a small processor) on the controller.
+</LI><LI>The processor initiates the DMA by writing the command into data
+registers on the controller (e.g., read sector 5, head 4, cylinder
+123 into memory location 34500)
+</LI><LI>For commands that are longer than the size of the data register(s), a
+protocol must be used to transmit the information.
+</LI><LI>(I/O done by the processor as in the previous methods is called
+programmed I/O, PIO).
+</LI><LI>The controller collects data from the device and then sends it on
+the bus to the memory without bothering the CPU.
+    <UL>
+    <LI>So we have a multimaster bus and need some sort of
+    arbitration.
+    </LI><LI>Normally the I/O devices are given higher priority than the CPU.
+    </LI><LI>Freeing the CPU from this task is good but isn't as wonderful
+    as it seems since the memory is busy (but cache hits can be
+    processed).
+    </LI><LI>A big gain is that only one bus transaction is needed per bus
+    load.  With PIO, two transactions are needed: controller to
+    processor and then processor to memory.
+    </LI><LI>This was for an input operation (the device writes to
+    memory).  A similar situation occurs for output where the device
+    reads from the memory).  Once again one bus transaction per bus
+    load.
+    </LI></UL>
+</LI><LI>When the controller detects that the I/O is complete or if an
+error occurs, it sets the status register accordingly and sends an
+interrupt to the processor to notify the latter that the I/O is complete.
+</LI></UL>
+<BR clear="right">
+
+<H4>More Sophisticated Controllers</H4>
+
+<UL>
+<LI>Sometimes (often?) called ``intelligent'' device controlers, but I
+prefer not to anthropomorphisize (sp?).
+</LI><LI>Some devices, for example a modem on a serial line, deliver data
+without being requested to.  So a controller may need to be prepared
+for unrequested data.
+</LI><LI>Some devices, for example an ethernet, have a complicated
+protocol so it is desirable for the controller to process some of that
+protocol.  In particular, the collision detection and retry with
+exponential backoff caharacteristic of (non-switched) ethernet
+requires a real program.
+</LI><LI>Hence some controllers have full microprocessors on
+board.  These controllers handle much more than block transfers.
+</LI><LI>In the old days there were I/O channels, which could execute
+entire programs.  However, channel programs were written dynamically by
+the main processor.  For the modern controllers the programs are fixed
+and loaded in ROM or PROM.
+</LI></UL>
+
+<H4>Subtlties involving the memory system</H4>
+
+<UL>
+<LI>Just writing to memory doesn't update the cache.
+</LI><LI>Reading from memory gets old values with a write-back cache.
+</LI><LI>The memory area to be read or written is specified by the program
+using virtual addresses.  But the I/O must actually go to physical
+addresses.  Need help from the MMU.
+</LI></UL>
+
+
+
+
+<H2>8.6: Designing an I/O system</H2>
+
+<P>Do on the board the example page 681
+
+</P><UL>
+<LI>Assume a system with
+    <OL>
+    <LI>CPU executes 300 million instructions/sec
+    </LI><LI>50K instructions for each I/O (OS instructions)
+    </LI><LI>Backplane bus on which all I/O travels supports 100MB/sec
+    </LI><LI>Disk controllers (scsi-2) supporting 20MB/sec and
+    accommodating up to 7 disks.
+    </LI><LI>Disks with bandwidth 5MB/sec and seek plus rotational latency
+    of 10ms
+    </LI></OL>
+</LI><LI>Assume a workload of 64-KB reads and 100K instructions between
+reads.
+</LI><LI>Find
+    <OL>
+    <LI>Max I/O rate achievable
+    </LI><LI>How many controllers are needed for this rate.
+    </LI><LI>How many disks are needed
+    </LI></OL>
+</LI><LI>I/O takes 150,000 instructions
+</LI><LI>So CPU limits us to 2000 I/O per sec
+</LI><LI>Backplane bus limits us to 100 million / 64,000 = 1562 I/Os per
+sec
+</LI><LI>So max is 1562 / sec
+</LI><LI>Time for each I/O (at the disk) is 22.8ms
+</LI><LI>Each disk can achieve 43.9 I/Os per sec
+</LI><LI>So need 36 disks
+</LI><LI>Each disk uses avg 2.74 MB/sec of bus bandwidth (64KB/22.8ms)
+</LI><LI>Since the scsi bus supports 20 MB/sec it will not be limiting and
+we can load it to the max (i.e. 7 disks).
+</LI><LI>So need 6 controllers (not all will have 7 disks).
+</LI></UL>
+
+<P><STRONG>Remark:</STRONG> The above analysis was very simplistic.
+It assumed everything overlapped just right and the I/Os were not
+bursty and that the I/Os conveniently spread themselves accross the disks.
+
+</P><HR><DIV align="center"><STRONG><BIG> ======== START LECTURE #28
+========</BIG></STRONG></DIV><HR> 
+
+<P>Review for final.
+
+</P><UL>
+<LI>Do example at beginning of last time (which was skipped).
+</LI><LI>Between 30%-40% of exam will be on material from first half
+(i.e. lectures 1-13, includes H&amp;P  App B, Ch 3, Ch 4).
+</LI><LI>Between 60%-70% of exam will be on material from second half
+(i.e. lectures 15-27, includes H&amp;P Ch 5, Ch 2, Ch 7, Ch 8)
+</LI><LI>A fair question would be to hand out the datapath and ask you to
+modify it to support an additional instruction.
+</LI><LI>An unfair question would be to ask you to draw the datapath (i.e.,
+I don't assume you have it memorized).
+</LI><LI>Questions on how much faster a system gets if cache misses
+decreases or how much faster if cpu+cache is faster but memory isn't
+</LI><LI>Direct mapped vs associative caches.
+</LI><LI>Block sizes
+</LI><LI>MHz vs ns
+</LI><LI>I/O configurations
+</LI></UL>
+
+<!--
+Local Variables:
+tab-width: 4
+indent-tabs-mode: nil
+eval: (define-abbrev text-mode-abbrev-table "hw"
+                     "<p><strong>Homework:</strong>")
+eval: (define-abbrev text-mode-abbrev-table "lecture"
+    "<hr><div align=center><strong><big> ======== START LECTURE # ========</big></strong></div><hr>")
+eval: (abbrev-mode 1)
+End:
+-->
+</LI></OL></BODY></HTML>
