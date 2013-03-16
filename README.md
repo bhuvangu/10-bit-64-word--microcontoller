@@ -1,8 +1,8 @@
 10-bit-64-word--microcontoller
 ==============================
-Dependency::
-Logisim
-You can actually run individual component like ALU, memory etc.
+###Dependency::
+#Logisim
+*You can actually run individual component like ALU, memory etc.
 
 ![Alt text](/report/report/main.jpg "Optional title")
 ![Alt text](/report/report/006.jpg "Optional title")
