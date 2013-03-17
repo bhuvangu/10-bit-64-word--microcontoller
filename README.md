@@ -3,7 +3,8 @@
 ##Dependency::
 #Logisim
 *You can actually run individual component like ALU, memory etc.
-###MAIN FILES  advanced simu/simu1
+###MAIN FILES  advanced simu1/simu
+
 
 ![Alt text](/report/report/main.jpg "Optional title")
 ![Alt text](/report/report/006.jpg "Optional title")
