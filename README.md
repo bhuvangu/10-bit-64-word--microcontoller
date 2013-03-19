@@ -1,5 +1,7 @@
 10-bit-64-word--microcontoller
 ==============================
+#About
+Each and every component(ALU, memory, PC, IR, CU) is designed from basic gate.
 ##Dependency::
 #Logisim
 *You can actually run individual component like ALU, memory etc.
